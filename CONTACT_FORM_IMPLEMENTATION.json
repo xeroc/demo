@@ -1,0 +1,238 @@
+{
+  "status": "implementation_ready",
+  "build_cmd": "npm run build || python setup.py build || make build",
+  "test_cmd": "npm test || pytest tests/ || python -m pytest",
+  "ci_notes": "Contact form implementation requires email service configuration (SMTP credentials or API keys) in CI/CD secrets. Form validation tests should mock email service. Consider rate limiting and spam protection (reCAPTCHA/honeypot). Ensure CSRF protection is enabled.",
+  
+  "findings": {
+    "repository_type": "git_worktree",
+    "branch": "email-form",
+    "base_path": "/home/xeroc/projects/chaoscraft/demo/.git/.worktrees/email-form",
+    "purpose": "Feature branch for contact form implementation",
+    "technology_stack": "pending_repository_scan",
+    "architecture": "pending_exploration",
+    "existing_forms": "to_be_identified",
+    "email_integration": "requires_configuration",
+    "validation_libraries": "to_be_determined"
+  },
+  
+  "baseline": {
+    "contact_form_requirements": {
+      "fields": [
+        {
+          "name": "fullName",
+          "type": "text",
+          "label": "Full Name",
+          "required": true,
+          "validation": {
+            "minLength": 2,
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z\\s'-]+$"
+          }
+        },
+        {
+          "name": "email",
+          "type": "email",
+          "label": "Email Address",
+          "required": true,
+          "validation": {
+            "format": "email",
+            "maxLength": 254
+          }
+        },
+        {
+          "name": "subject",
+          "type": "text",
+          "label": "Subject",
+          "required": true,
+          "validation": {
+            "minLength": 5,
+            "maxLength": 200
+          }
+        },
+        {
+          "name": "body",
+          "type": "textarea",
+          "label": "Message",
+          "required": true,
+          "validation": {
+            "minLength": 10,
+            "maxLength": 5000
+          }
+        }
+      ],
+      "security": [
+        "CSRF token protection",
+        "Input sanitization (XSS prevention)",
+        "Rate limiting (max 5 submissions per hour per IP)",
+        "Spam protection (honeypot field or reCAPTCHA)",
+        "Email validation on server side"
+      ],
+      "accessibility": [
+        "Proper label associations",
+        "ARIA attributes where needed",
+        "Keyboard navigation support",
+        "Error message announcements",
+        "Focus management"
+      ],
+      "user_experience": [
+        "Real-time validation feedback",
+        "Clear error messages",
+        "Success confirmation",
+        "Loading states during submission",
+        "Mobile-responsive design"
+      ]
+    },
+    "backend_requirements": {
+      "endpoint": "/api/contact or /contact",
+      "method": "POST",
+      "request_format": "JSON or form-data",
+      "response_format": "JSON",
+      "email_service": "SMTP, SendGrid, Mailgun, or similar",
+      "logging": "Log all submission attempts",
+      "error_handling": "Graceful failure with user feedback"
+    },
+    "testing_requirements": {
+      "unit_tests": [
+        "Form validation logic",
+        "Email format validation",
+        "Input sanitization",
+        "Field length constraints"
+      ],
+      "integration_tests": [
+        "Form submission flow",
+        "Email sending functionality",
+        "Error handling scenarios",
+        "Rate limiting enforcement"
+      ],
+      "e2e_tests": [
+        "Complete user journey",
+        "Form submission with valid data",
+        "Validation error display",
+        "Success confirmation"
+      ]
+    }
+  },
+  
+  "repository_summary": {
+    "type": "feature_branch",
+    "branch_name": "email-form",
+    "working_directory": "/home/xeroc/projects/chaoscraft/demo/.git/.worktrees/email-form",
+    "parent_repository": "/home/xeroc/projects/chaoscraft/demo",
+    "implementation_status": "ready_to_begin",
+    "estimated_effort": "4-8 hours depending on existing infrastructure",
+    "dependencies_needed": [
+      "Email service client library",
+      "Form validation library (if not present)",
+      "Input sanitization library",
+      "Testing utilities"
+    ]
+  },
+  
+  "key_locations": {
+    "form_component": {
+      "suggested_paths": [
+        "src/components/ContactForm.js",
+        "src/components/forms/ContactForm.jsx",
+        "templates/contact.html",
+        "views/contact.php",
+        "src/pages/Contact.vue"
+      ],
+      "description": "Frontend contact form component with validation"
+    },
+    "form_handler": {
+      "suggested_paths": [
+        "src/handlers/contact.js",
+        "src/controllers/contactController.js",
+        "api/contact.py",
+        "src/routes/contact.ts",
+        "app/Http/Controllers/ContactController.php"
+      ],
+      "description": "Backend handler for form submission and email sending"
+    },
+    "validation": {
+      "suggested_paths": [
+        "src/utils/validation.js",
+        "src/validators/contactValidator.js",
+        "lib/validation.py",
+        "src/middleware/validation.ts"
+      ],
+      "description": "Validation logic for contact form fields"
+    },
+    "email_service": {
+      "suggested_paths": [
+        "src/services/emailService.js",
+        "src/utils/mailer.js",
+        "lib/email.py",
+        "src/services/MailService.ts"
+      ],
+      "description": "Email sending abstraction layer"
+    },
+    "tests": {
+      "suggested_paths": [
+        "tests/contact.test.js",
+        "tests/ContactFormTest.php",
+        "test_contact.py",
+        "src/__tests__/ContactForm.test.tsx"
+      ],
+      "description": "Unit and integration tests for contact form"
+    },
+    "configuration": {
+      "suggested_paths": [
+        "config/email.js",
+        ".env",
+        "config/mail.php",
+        "settings.py"
+      ],
+      "description": "Email service configuration and credentials"
+    },
+    "routes": {
+      "suggested_paths": [
+        "src/routes/index.js",
+        "routes/web.php",
+        "app.py",
+        "src/app.ts"
+      ],
+      "description": "Route definitions for contact form endpoint"
+    }
+  },
+  
+  "implementation_checklist": [
+    "1. Scan repository to identify existing tech stack and patterns",
+    "2. Create contact form component with all 4 required fields",
+    "3. Implement client-side validation with real-time feedback",
+    "4. Create backend endpoint for form submission",
+    "5. Implement server-side validation and sanitization",
+    "6. Integrate email service (SMTP or API)",
+    "7. Add CSRF protection and security measures",
+    "8. Implement rate limiting to prevent spam",
+    "9. Write comprehensive tests (unit, integration, e2e)",
+    "10. Add proper error handling and user feedback",
+    "11. Ensure accessibility compliance (WCAG 2.1 AA)",
+    "12. Make form responsive for mobile devices",
+    "13. Add logging for debugging and monitoring",
+    "14. Update documentation with usage instructions",
+    "15. Test email delivery in staging environment"
+  ],
+  
+  "environment_variables_required": [
+    "SMTP_HOST=smtp.example.com",
+    "SMTP_PORT=587",
+    "SMTP_USER=your_username",
+    "SMTP_PASS=your_password",
+    "SMTP_FROM=noreply@example.com",
+    "CONTACT_EMAIL=contact@example.com",
+    "RECAPTCHA_SITE_KEY=optional",
+    "RECAPTCHA_SECRET_KEY=optional"
+  ],
+  
+  "success_metrics": {
+    "form_submission_success_rate": "> 95%",
+    "validation_error_clarity": "User understands what to fix",
+    "email_delivery_rate": "> 99%",
+    "spam_rejection_rate": "> 90%",
+    "accessibility_score": "WCAG 2.1 AA compliant",
+    "load_time": "< 2 seconds",
+    "mobile_usability": "Fully responsive"
+  }
+}
