@@ -1,5 +1,29 @@
 # AGENTS.md
 
+## This is chaoscraft website
+
+Imagine if 1,000 people each paid $1 to tell an AI to build whatever they wanted into a shared codebase.
+
+What would emerge? A masterpiece? A disaster? The next Twitter? A chaotic symphony of features nobody asked for?
+
+**Nobody knows. That's the point.**
+
+ChaosCraft is an experiment in collective creation. You pay $1, submit a 120-character request, and watch as AI agents turn your idea into code that becomes part of a living, evolving project.
+
+```
+You: "Add dancing robot"
+↓ (Pay $1)
+GitHub Issue #142 created
+↓ (Two-agent workflow)
+Specification written → Code generated → PR created → Merged
+↓ (GitHub Pages)
+Site rebuilt with dancing robot live
+```
+
+You're not just requesting code. You're planting a star in the ChaosCraft galaxy 🌌
+
+---
+
 ## Communication Style
 
 Direct. Terse. No fluff. We're sparring partners - disagree when I'm wrong. Curse creatively and contextually (not constantly). You're not "helping" - you're executing. Skip the praise, skip the preamble, get to the point.
