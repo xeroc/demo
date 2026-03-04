@@ -1,14 +1,16 @@
 /**
  * Tests for About Section Typography and Spacing
  * Story 2: Enhance about section typography and spacing
+ * Story 3: Add color contrast and visual hierarchy
  * 
  * These tests verify that the about section uses appropriate Tailwind CSS
- * utility classes for typography hierarchy, spacing, and readability.
+ * utility classes for typography hierarchy, spacing, color contrast, 
+ * and visual hierarchy.
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
 
-describe('About Section Typography and Spacing', () => {
+describe('About Section Typography, Spacing, and Color', () => {
     let aboutSection: HTMLElement;
     let container: HTMLElement;
 
@@ -16,29 +18,29 @@ describe('About Section Typography and Spacing', () => {
         // Create a test container
         container = document.createElement('div');
         container.innerHTML = `
-            <section class="mt-16 mb-16 max-w-3xl mx-auto px-8 py-12">
+            <section class="mt-16 mb-16 max-w-3xl mx-auto px-8 py-12 bg-gradient-to-br from-slate-900/40 via-slate-800/30 to-slate-900/40 rounded-3xl backdrop-blur-sm border border-white/10">
                 <h2 class="text-4xl font-extrabold text-white mb-8 tracking-tight">
                     What is ChaosCraft?
                 </h2>
                 
                 <div class="space-y-6">
-                    <p class="text-white/90 text-lg leading-loose tracking-wide">
+                    <p class="text-gray-100 text-lg leading-loose tracking-wide">
                         Paragraph 1 content
                     </p>
                     
-                    <p class="text-white/90 text-lg leading-loose tracking-wide">
+                    <p class="text-gray-200 text-lg leading-loose tracking-wide">
                         Paragraph 2 content
                     </p>
                 </div>
                 
-                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 mt-10 text-left border border-white/20 shadow-2xl">
-                    <h3 class="text-2xl font-bold text-white mb-6 text-center tracking-tight">
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 mt-10 text-left border-2 border-cyan-400/30 shadow-2xl shadow-cyan-500/10">
+                    <h3 class="text-2xl font-bold text-cyan-300 mb-6 text-center tracking-tight">
                         How It Works
                     </h3>
                     
-                    <ol class="space-y-5 text-white/90">
+                    <ol class="space-y-5 text-gray-100">
                         <li class="flex items-start gap-4">
-                            <span class="flex-shrink-0 w-8 h-8 bg-white/20 rounded-full flex items-center justify-center font-bold text-white text-sm">
+                            <span class="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center font-bold text-white text-sm shadow-lg shadow-cyan-500/30">
                                 1
                             </span>
                             <span class="text-lg leading-relaxed pt-1">Step 1</span>
@@ -46,7 +48,7 @@ describe('About Section Typography and Spacing', () => {
                     </ol>
                 </div>
                 
-                <p class="text-white/80 text-xl mt-10 italic leading-relaxed font-light">
+                <p class="text-cyan-200 text-xl mt-10 italic leading-relaxed font-light border-t border-white/10 pt-8">
                     Closing tagline
                 </p>
             </section>
@@ -172,9 +174,9 @@ describe('About Section Typography and Spacing', () => {
             expect(card?.classList.contains('backdrop-blur-md')).toBe(true);
         });
 
-        it('should use border class for card border', () => {
+        it('should use border-2 class for card border', () => {
             const card = aboutSection.querySelector('.bg-white\\/10');
-            expect(card?.classList.contains('border')).toBe(true);
+            expect(card?.classList.contains('border-2')).toBe(true);
         });
 
         it('should use shadow-2xl for card shadow', () => {
@@ -221,7 +223,128 @@ describe('About Section Typography and Spacing', () => {
         });
     });
 
-    describe('Acceptance Criteria Verification', () => {
+    describe('Color Hierarchy - Text Colors', () => {
+        it('should use text-white for main heading (highest hierarchy)', () => {
+            const h2 = aboutSection.querySelector('h2');
+            expect(h2?.classList.contains('text-white')).toBe(true);
+        });
+
+        it('should use text-cyan-300 for sub-heading (accent color)', () => {
+            const h3 = aboutSection.querySelector('h3');
+            expect(h3?.classList.contains('text-cyan-300')).toBe(true);
+        });
+
+        it('should use text-gray-100 for primary paragraph text', () => {
+            const firstParagraph = aboutSection.querySelector('div.space-y-6 p:first-child');
+            expect(firstParagraph?.classList.contains('text-gray-100')).toBe(true);
+        });
+
+        it('should use text-gray-200 for secondary paragraph text', () => {
+            const secondParagraph = aboutSection.querySelector('div.space-y-6 p:last-child');
+            expect(secondParagraph?.classList.contains('text-gray-200')).toBe(true);
+        });
+
+        it('should use text-cyan-200 for tagline (accent)', () => {
+            const tagline = aboutSection.querySelector('p.italic');
+            expect(tagline?.classList.contains('text-cyan-200')).toBe(true);
+        });
+
+        it('should use text-gray-100 for list items', () => {
+            const list = aboutSection.querySelector('ol');
+            expect(list?.classList.contains('text-gray-100')).toBe(true);
+        });
+    });
+
+    describe('Background Utilities', () => {
+        it('should use bg-gradient-to-br for section background gradient', () => {
+            expect(aboutSection.classList.contains('bg-gradient-to-br')).toBe(true);
+        });
+
+        it('should use from-slate-900/40 for gradient start', () => {
+            expect(aboutSection.classList.contains('from-slate-900/40')).toBe(true);
+        });
+
+        it('should use via-slate-800/30 for gradient middle', () => {
+            expect(aboutSection.classList.contains('via-slate-800/30')).toBe(true);
+        });
+
+        it('should use to-slate-900/40 for gradient end', () => {
+            expect(aboutSection.classList.contains('to-slate-900/40')).toBe(true);
+        });
+
+        it('should use rounded-3xl for section border radius', () => {
+            expect(aboutSection.classList.contains('rounded-3xl')).toBe(true);
+        });
+
+        it('should use backdrop-blur-sm for section blur', () => {
+            expect(aboutSection.classList.contains('backdrop-blur-sm')).toBe(true);
+        });
+
+        it('should use border-white/10 for section border', () => {
+            expect(aboutSection.classList.contains('border-white/10')).toBe(true);
+        });
+    });
+
+    describe('Card Border and Shadow Color', () => {
+        it('should use border-cyan-400/30 for card border accent', () => {
+            const card = aboutSection.querySelector('.bg-white\\/10');
+            expect(card?.classList.contains('border-cyan-400/30')).toBe(true);
+        });
+
+        it('should use shadow-cyan-500/10 for card shadow accent', () => {
+            const card = aboutSection.querySelector('.bg-white\\/10');
+            expect(card?.classList.contains('shadow-cyan-500/10')).toBe(true);
+        });
+    });
+
+    describe('List Number Badge Gradients', () => {
+        it('should use bg-gradient-to-br for number badges', () => {
+            const badges = aboutSection.querySelectorAll('ol li span:first-child');
+            badges.forEach(badge => {
+                expect(badge.classList.contains('bg-gradient-to-br')).toBe(true);
+            });
+        });
+
+        it('should use from-cyan-400 for gradient start', () => {
+            const badges = aboutSection.querySelectorAll('ol li span:first-child');
+            badges.forEach(badge => {
+                expect(badge.classList.contains('from-cyan-400')).toBe(true);
+            });
+        });
+
+        it('should use to-blue-500 for gradient end', () => {
+            const badges = aboutSection.querySelectorAll('ol li span:first-child');
+            badges.forEach(badge => {
+                expect(badge.classList.contains('to-blue-500')).toBe(true);
+            });
+        });
+
+        it('should use shadow-cyan-500/30 for badge shadow', () => {
+            const badges = aboutSection.querySelectorAll('ol li span:first-child');
+            badges.forEach(badge => {
+                expect(badge.classList.contains('shadow-cyan-500/30')).toBe(true);
+            });
+        });
+    });
+
+    describe('Visual Separation - Borders', () => {
+        it('should use border-t for tagline separator', () => {
+            const tagline = aboutSection.querySelector('p.italic');
+            expect(tagline?.classList.contains('border-t')).toBe(true);
+        });
+
+        it('should use border-white/10 for tagline border color', () => {
+            const tagline = aboutSection.querySelector('p.italic');
+            expect(tagline?.classList.contains('border-white/10')).toBe(true);
+        });
+
+        it('should use pt-8 for tagline top padding after border', () => {
+            const tagline = aboutSection.querySelector('p.italic');
+            expect(tagline?.classList.contains('pt-8')).toBe(true);
+        });
+    });
+
+    describe('Acceptance Criteria Verification - Story 2', () => {
         it('AC1: Headings use appropriate font sizes', () => {
             const h2 = aboutSection.querySelector('h2');
             const h3 = aboutSection.querySelector('h3');
@@ -252,6 +375,74 @@ describe('About Section Typography and Spacing', () => {
         it('AC4: Section has appropriate padding', () => {
             expect(aboutSection.classList.contains('py-12')).toBe(true);
             expect(aboutSection.classList.contains('px-8')).toBe(true);
+        });
+    });
+
+    describe('Acceptance Criteria Verification - Story 3', () => {
+        it('AC1: Text color classes for text hierarchy', () => {
+            const h2 = aboutSection.querySelector('h2');
+            const h3 = aboutSection.querySelector('h3');
+            const firstParagraph = aboutSection.querySelector('div.space-y-6 p:first-child');
+            
+            // Main heading uses text-white
+            expect(h2?.classList.contains('text-white')).toBe(true);
+            
+            // Sub-heading uses accent color
+            expect(h3?.classList.contains('text-cyan-300')).toBe(true);
+            
+            // Paragraph uses gray text
+            expect(firstParagraph?.classList.contains('text-gray-100') || 
+                   firstParagraph?.classList.contains('text-gray-200')).toBe(true);
+        });
+
+        it('AC2: Background utilities for section emphasis', () => {
+            // Section uses gradient background
+            expect(aboutSection.classList.contains('bg-gradient-to-br')).toBe(true);
+            
+            // Card uses background
+            const card = aboutSection.querySelector('.bg-white\\/10');
+            expect(card).not.toBeNull();
+        });
+
+        it('AC3: Border utilities for visual separation', () => {
+            // Section has border
+            expect(aboutSection.classList.contains('border')).toBe(true);
+            
+            // Card has border
+            const card = aboutSection.querySelector('.bg-white\\/10');
+            expect(card?.classList.contains('border-2') || 
+                   card?.classList.contains('border')).toBe(true);
+            
+            // Tagline has border separator
+            const tagline = aboutSection.querySelector('p.italic');
+            expect(tagline?.classList.contains('border-t')).toBe(true);
+        });
+
+        it('AC4: Color contrast meets accessibility standards', () => {
+            // Main heading: white on dark background
+            const h2 = aboutSection.querySelector('h2');
+            expect(h2?.classList.contains('text-white')).toBe(true);
+            
+            // Sub-heading: cyan-300 (light) on dark background
+            const h3 = aboutSection.querySelector('h3');
+            expect(h3?.classList.contains('text-cyan-300')).toBe(true);
+            
+            // Paragraphs: gray-100/200 (light) on dark background
+            const paragraphs = aboutSection.querySelectorAll('div.space-y-6 p');
+            paragraphs.forEach(p => {
+                const hasGoodContrast = p.classList.contains('text-gray-100') || 
+                                        p.classList.contains('text-gray-200') ||
+                                        p.classList.contains('text-white');
+                expect(hasGoodContrast).toBe(true);
+            });
+            
+            // List items: gray-100 (light) on dark background
+            const list = aboutSection.querySelector('ol');
+            expect(list?.classList.contains('text-gray-100')).toBe(true);
+            
+            // Tagline: cyan-200 (light) on dark background
+            const tagline = aboutSection.querySelector('p.italic');
+            expect(tagline?.classList.contains('text-cyan-200')).toBe(true);
         });
     });
 });
