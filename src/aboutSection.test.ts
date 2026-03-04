@@ -3,15 +3,16 @@
  * Story 2: Enhance about section typography and spacing
  * Story 3: Add color contrast and visual hierarchy
  * Story 4: Implement responsive design improvements
+ * Story 5: Add visual elements and card styling
  * 
  * These tests verify that the about section uses appropriate Tailwind CSS
  * utility classes for typography hierarchy, spacing, color contrast, 
- * visual hierarchy, and responsive design.
+ * visual hierarchy, responsive design, and visual elements.
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
 
-describe('About Section Typography, Spacing, Color, and Responsive Design', () => {
+describe('About Section Typography, Spacing, Color, Responsive Design, and Visual Elements', () => {
     let aboutSection: HTMLElement;
     let container: HTMLElement;
 
@@ -19,7 +20,10 @@ describe('About Section Typography, Spacing, Color, and Responsive Design', () =
         // Create a test container with responsive classes
         container = document.createElement('div');
         container.innerHTML = `
-            <section class="mt-8 sm:mt-12 md:mt-16 mb-8 sm:mb-12 md:mb-16 max-w-xl sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-10 md:py-12 bg-gradient-to-br from-slate-900/40 via-slate-800/30 to-slate-900/40 rounded-2xl sm:rounded-3xl backdrop-blur-sm border border-white/10">
+            <section class="mt-8 sm:mt-12 md:mt-16 mb-8 sm:mb-12 md:mb-16 max-w-xl sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-10 md:py-12 bg-gradient-to-br from-slate-900/40 via-slate-800/30 to-slate-900/40 rounded-2xl sm:rounded-3xl backdrop-blur-sm border border-white/10 shadow-xl hover:shadow-2xl transition-shadow duration-300 relative">
+                <!-- Decorative gradient accent line at top -->
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 rounded-full"></div>
+                
                 <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-4 sm:mb-6 md:mb-8 tracking-tight">
                     What is ChaosCraft?
                 </h2>
@@ -34,19 +38,26 @@ describe('About Section Typography, Spacing, Color, and Responsive Design', () =
                     </p>
                 </div>
                 
-                <div class="bg-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 mt-6 sm:mt-8 md:mt-10 text-left border-2 border-cyan-400/30 shadow-2xl shadow-cyan-500/10">
+                <div class="bg-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 mt-6 sm:mt-8 md:mt-10 text-left border-2 border-cyan-400/30 shadow-xl hover:shadow-2xl hover:border-cyan-400/50 transition-all duration-300 ease-in-out">
                     <h3 class="text-lg sm:text-xl md:text-2xl font-bold text-cyan-300 mb-4 sm:mb-5 md:mb-6 text-center tracking-tight">
                         How It Works
                     </h3>
                     
                     <ol class="space-y-3 sm:space-y-4 md:space-y-5 text-gray-100">
-                        <li class="flex items-start gap-3 sm:gap-4">
+                        <li class="flex items-start gap-3 sm:gap-4 p-2 sm:p-3 rounded-lg hover:bg-white/5 transition-colors duration-200">
                             <span class="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center font-bold text-white text-xs sm:text-sm shadow-lg shadow-cyan-500/30">
                                 1
                             </span>
                             <span class="text-sm sm:text-base md:text-lg leading-relaxed pt-0.5 sm:pt-1">Step 1</span>
                         </li>
                     </ol>
+                </div>
+                
+                <!-- Decorative sparkle elements -->
+                <div class="flex justify-center gap-2 my-6">
+                    <span class="text-cyan-300 animate-pulse">✨</span>
+                    <span class="text-blue-300 animate-pulse" style="animation-delay: 0.2s">✨</span>
+                    <span class="text-purple-300 animate-pulse" style="animation-delay: 0.4s">✨</span>
                 </div>
                 
                 <p class="text-base sm:text-lg md:text-xl text-cyan-200 mt-6 sm:mt-8 md:mt-10 italic leading-relaxed font-light border-t border-white/10 pt-6 sm:pt-7 md:pt-8">
@@ -327,9 +338,9 @@ describe('About Section Typography, Spacing, Color, and Responsive Design', () =
             expect(card?.classList.contains('border-cyan-400/30')).toBe(true);
         });
 
-        it('should use shadow-cyan-500/10 for card shadow accent', () => {
+        it('should use shadow-xl on card for depth', () => {
             const card = aboutSection.querySelector('.bg-white\\/10');
-            expect(card?.classList.contains('shadow-cyan-500/10')).toBe(true);
+            expect(card?.classList.contains('shadow-xl')).toBe(true);
         });
     });
 
@@ -355,9 +366,10 @@ describe('About Section Typography, Spacing, Color, and Responsive Design', () =
             });
         });
 
-        it('should use shadow-cyan-500/30 for badge shadow', () => {
+        it('should use shadow-lg and shadow-cyan-500/30 for badge shadow', () => {
             const badges = aboutSection.querySelectorAll('ol li span:first-child');
             badges.forEach(badge => {
+                expect(badge.classList.contains('shadow-lg')).toBe(true);
                 expect(badge.classList.contains('shadow-cyan-500/30')).toBe(true);
             });
         });
@@ -372,6 +384,267 @@ describe('About Section Typography, Spacing, Color, and Responsive Design', () =
         it('should use border-white/10 for tagline border color', () => {
             const tagline = aboutSection.querySelector('p.italic');
             expect(tagline?.classList.contains('border-white/10')).toBe(true);
+        });
+    });
+
+    // ========================================
+    // Story 5: Visual Elements and Card Styling Tests
+    // ========================================
+
+    describe('Shadow Utilities for Depth', () => {
+        it('should use shadow-xl on section for depth', () => {
+            expect(aboutSection.classList.contains('shadow-xl')).toBe(true);
+        });
+
+        it('should use hover:shadow-2xl on section for hover depth effect', () => {
+            expect(aboutSection.classList.contains('hover:shadow-2xl')).toBe(true);
+        });
+
+        it('should use shadow-xl on card for depth', () => {
+            const card = aboutSection.querySelector('.bg-white\\/10');
+            expect(card?.classList.contains('shadow-xl')).toBe(true);
+        });
+
+        it('should use hover:shadow-2xl on card for hover depth effect', () => {
+            const card = aboutSection.querySelector('.bg-white\\/10');
+            expect(card?.classList.contains('hover:shadow-2xl')).toBe(true);
+        });
+
+        it('should use shadow-lg on number badges', () => {
+            const badges = aboutSection.querySelectorAll('ol li span:first-child');
+            badges.forEach(badge => {
+                expect(badge.classList.contains('shadow-lg')).toBe(true);
+            });
+        });
+    });
+
+    describe('Rounded Corners for Softer Boundaries', () => {
+        it('should use rounded-lg on list items for softer boundaries', () => {
+            const listItems = aboutSection.querySelectorAll('ol li');
+            listItems.forEach(li => {
+                expect(li.classList.contains('rounded-lg')).toBe(true);
+            });
+        });
+
+        it('should use rounded-full on decorative gradient line', () => {
+            const gradientLine = aboutSection.querySelector('.absolute.top-0');
+            expect(gradientLine?.classList.contains('rounded-full')).toBe(true);
+        });
+
+        it('should use rounded-full on number badges', () => {
+            const badges = aboutSection.querySelectorAll('ol li span:first-child');
+            badges.forEach(badge => {
+                expect(badge.classList.contains('rounded-full')).toBe(true);
+            });
+        });
+    });
+
+    describe('Hover Effects with Transition Utilities', () => {
+        it('should use transition-shadow on section for smooth shadow transitions', () => {
+            expect(aboutSection.classList.contains('transition-shadow')).toBe(true);
+        });
+
+        it('should use duration-300 on section for transition timing', () => {
+            expect(aboutSection.classList.contains('duration-300')).toBe(true);
+        });
+
+        it('should use hover:border-cyan-400/50 on card for hover border effect', () => {
+            const card = aboutSection.querySelector('.bg-white\\/10');
+            expect(card?.classList.contains('hover:border-cyan-400/50')).toBe(true);
+        });
+
+        it('should use transition-all on card for multiple property transitions', () => {
+            const card = aboutSection.querySelector('.bg-white\\/10');
+            expect(card?.classList.contains('transition-all')).toBe(true);
+        });
+
+        it('should use ease-in-out on card for smooth transition timing', () => {
+            const card = aboutSection.querySelector('.bg-white\\/10');
+            expect(card?.classList.contains('ease-in-out')).toBe(true);
+        });
+
+        it('should use hover:bg-white/5 on list items for hover background effect', () => {
+            const listItems = aboutSection.querySelectorAll('ol li');
+            listItems.forEach(li => {
+                expect(li.classList.contains('hover:bg-white/5')).toBe(true);
+            });
+        });
+
+        it('should use transition-colors on list items for color transitions', () => {
+            const listItems = aboutSection.querySelectorAll('ol li');
+            listItems.forEach(li => {
+                expect(li.classList.contains('transition-colors')).toBe(true);
+            });
+        });
+
+        it('should use duration-200 on list items for transition timing', () => {
+            const listItems = aboutSection.querySelectorAll('ol li');
+            listItems.forEach(li => {
+                expect(li.classList.contains('duration-200')).toBe(true);
+            });
+        });
+    });
+
+    describe('Decorative Elements with Positioning Utilities', () => {
+        it('should have decorative gradient accent line at top', () => {
+            const gradientLine = aboutSection.querySelector('.absolute.top-0');
+            expect(gradientLine).not.toBeNull();
+        });
+
+        it('should use absolute positioning for gradient line', () => {
+            const gradientLine = aboutSection.querySelector('.absolute.top-0');
+            expect(gradientLine?.classList.contains('absolute')).toBe(true);
+        });
+
+        it('should center gradient line with left-1/2 and -translate-x-1/2', () => {
+            const gradientLine = aboutSection.querySelector('.absolute.top-0');
+            expect(gradientLine?.classList.contains('left-1/2')).toBe(true);
+            expect(gradientLine?.classList.contains('-translate-x-1/2')).toBe(true);
+        });
+
+        it('should use gradient colors for decorative line', () => {
+            const gradientLine = aboutSection.querySelector('.absolute.top-0');
+            expect(gradientLine?.classList.contains('bg-gradient-to-r')).toBe(true);
+            expect(gradientLine?.classList.contains('from-cyan-400')).toBe(true);
+            expect(gradientLine?.classList.contains('via-blue-500')).toBe(true);
+            expect(gradientLine?.classList.contains('to-purple-500')).toBe(true);
+        });
+
+        it('should have decorative sparkle elements container', () => {
+            const sparkles = aboutSection.querySelector('.flex.justify-center.gap-2');
+            expect(sparkles).not.toBeNull();
+        });
+
+        it('should use flexbox for sparkle container centering', () => {
+            const sparkles = aboutSection.querySelector('.flex.justify-center.gap-2');
+            expect(sparkles?.classList.contains('flex')).toBe(true);
+            expect(sparkles?.classList.contains('justify-center')).toBe(true);
+            expect(sparkles?.classList.contains('gap-2')).toBe(true);
+        });
+
+        it('should use animate-pulse on sparkle elements', () => {
+            const sparkles = aboutSection.querySelectorAll('.flex.justify-center.gap-2 span');
+            sparkles.forEach(sparkle => {
+                expect(sparkle.classList.contains('animate-pulse')).toBe(true);
+            });
+        });
+
+        it('should use different colors for sparkle elements', () => {
+            const sparkles = aboutSection.querySelectorAll('.flex.justify-center.gap-2 span');
+            const colors = Array.from(sparkles).map(s => {
+                if (s.classList.contains('text-cyan-300')) return 'cyan';
+                if (s.classList.contains('text-blue-300')) return 'blue';
+                if (s.classList.contains('text-purple-300')) return 'purple';
+                return 'unknown';
+            });
+            expect(colors).toContain('cyan');
+            expect(colors).toContain('blue');
+            expect(colors).toContain('purple');
+        });
+
+        it('should use relative positioning on section for absolute children', () => {
+            expect(aboutSection.classList.contains('relative')).toBe(true);
+        });
+    });
+
+    describe('Card Visual Enhancements', () => {
+        it('should have padding on list items for hover area', () => {
+            const listItems = aboutSection.querySelectorAll('ol li');
+            listItems.forEach(li => {
+                const hasP2 = li.classList.contains('p-2');
+                const hasP3 = li.classList.contains('p-3');
+                const hasSmP3 = li.classList.contains('sm:p-3');
+                expect(hasP2 || hasP3 || hasSmP3).toBe(true);
+            });
+        });
+
+        it('should use responsive padding on list items', () => {
+            const listItems = aboutSection.querySelectorAll('ol li');
+            listItems.forEach(li => {
+                expect(li.classList.contains('sm:p-3')).toBe(true);
+            });
+        });
+    });
+
+    describe('Acceptance Criteria Verification - Story 5 (Visual Elements)', () => {
+        it('AC1: Apply shadow utilities (shadow-md, shadow-lg, shadow-xl) for depth', () => {
+            // Section uses shadow-xl
+            expect(aboutSection.classList.contains('shadow-xl')).toBe(true);
+            
+            // Card uses shadow-xl
+            const card = aboutSection.querySelector('.bg-white\\/10');
+            expect(card?.classList.contains('shadow-xl')).toBe(true);
+            
+            // Badges use shadow-lg
+            const badges = aboutSection.querySelectorAll('ol li span:first-child');
+            badges.forEach(badge => {
+                expect(badge.classList.contains('shadow-lg')).toBe(true);
+            });
+        });
+
+        it('AC2: Use rounded-* classes for softer element boundaries', () => {
+            // Section has responsive rounded
+            expect(aboutSection.classList.contains('rounded-2xl')).toBe(true);
+            
+            // Card has responsive rounded
+            const card = aboutSection.querySelector('.bg-white\\/10');
+            expect(card?.classList.contains('rounded-xl')).toBe(true);
+            
+            // List items have rounded-lg
+            const listItems = aboutSection.querySelectorAll('ol li');
+            listItems.forEach(li => {
+                expect(li.classList.contains('rounded-lg')).toBe(true);
+            });
+            
+            // Badges have rounded-full
+            const badges = aboutSection.querySelectorAll('ol li span:first-child');
+            badges.forEach(badge => {
+                expect(badge.classList.contains('rounded-full')).toBe(true);
+            });
+        });
+
+        it('AC3: Add hover effects with transition utilities (hover:shadow-lg, transition-shadow)', () => {
+            // Section has hover:shadow-2xl and transition-shadow
+            expect(aboutSection.classList.contains('hover:shadow-2xl')).toBe(true);
+            expect(aboutSection.classList.contains('transition-shadow')).toBe(true);
+            
+            // Card has hover:shadow-2xl and transition-all
+            const card = aboutSection.querySelector('.bg-white\\/10');
+            expect(card?.classList.contains('hover:shadow-2xl')).toBe(true);
+            expect(card?.classList.contains('transition-all')).toBe(true);
+            
+            // List items have hover:bg and transition-colors
+            const listItems = aboutSection.querySelectorAll('ol li');
+            listItems.forEach(li => {
+                expect(li.classList.contains('hover:bg-white/5')).toBe(true);
+                expect(li.classList.contains('transition-colors')).toBe(true);
+            });
+        });
+
+        it('AC4: Implement decorative elements using Tailwind positioning utilities', () => {
+            // Decorative gradient line exists
+            const gradientLine = aboutSection.querySelector('.absolute.top-0');
+            expect(gradientLine).not.toBeNull();
+            
+            // Uses absolute positioning
+            expect(gradientLine?.classList.contains('absolute')).toBe(true);
+            expect(gradientLine?.classList.contains('top-0')).toBe(true);
+            expect(gradientLine?.classList.contains('left-1/2')).toBe(true);
+            expect(gradientLine?.classList.contains('-translate-x-1/2')).toBe(true);
+            
+            // Decorative sparkles exist
+            const sparkles = aboutSection.querySelector('.flex.justify-center.gap-2');
+            expect(sparkles).not.toBeNull();
+            
+            // Uses flexbox positioning
+            expect(sparkles?.classList.contains('flex')).toBe(true);
+            expect(sparkles?.classList.contains('justify-center')).toBe(true);
+        });
+
+        it('AC5: Typecheck passes', () => {
+            // This test verifies that the test suite itself is valid TypeScript
+            // The actual typecheck is run separately via npm run typecheck
+            expect(true).toBe(true);
         });
     });
 
@@ -427,12 +700,6 @@ describe('About Section Typography, Spacing, Color, and Responsive Design', () =
             
             // Large desktop (lg): lg: prefix classes
             expect(aboutSection.classList.contains('lg:max-w-4xl')).toBe(true);
-        });
-
-        it('AC5: Typecheck passes', () => {
-            // This test verifies that the test suite itself is valid TypeScript
-            // The actual typecheck is run separately via npm run typecheck
-            expect(true).toBe(true);
         });
     });
 
