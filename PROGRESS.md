@@ -176,7 +176,91 @@
 - Tests: ✅ 38 tests passed (5 existing + 33 new)
 - All acceptance criteria: ✅ MET
 
+---
+
+## Story 3: Implement gradient position animator
+
+### Status: ✅ COMPLETE
+
+### Completed: 2024-03-05
+
+### Acceptance Criteria:
+- ✅ Animator calculates correct 45° trajectory (equal X and Y displacement)
+- ✅ Position updates smoothly using requestAnimationFrame
+- ✅ Animation can be started, stopped, and reset
+- ✅ Unit tests verify position calculations at various time points
+- ✅ Unit tests verify 45° angle math
+- ✅ Tests for gradient position animator pass
+- ✅ Typecheck passes
+
+### Changes Made:
+
+#### New Files Created:
+
+1. **src/gradientAnimator.ts**
+   - Animation controller module for gradient position
+   - Exports `AnimatorState` and `AnimatorConfig` interfaces
+   - Exports `DEFAULT_ANIMATOR_CONFIG` constant
+   - Core functions:
+     - `calculatePosition()`: Calculates X/Y position at 45° angle from time
+     - `verify45DegreeAngle()`: Validates that X and Y displacements are equal
+     - `GradientPositionAnimator` class: Main animation controller
+   - Class methods:
+     - `start()`: Begins animation using requestAnimationFrame
+     - `stop()`: Stops animation and cancels animation frame
+     - `reset()`: Resets to initial state
+     - `getState()`: Returns current animator state
+     - `getPosition()`: Returns current X/Y position
+     - `getIsRunning()`: Returns running status
+   - 45° angle math: Uses diagonalFactor = √2/2 for equal X/Y displacement
+   - Position wrapping within configurable bounds
+
+2. **src/gradientAnimator.test.ts**
+   - 33 comprehensive unit tests
+   - Test coverage:
+     - Position calculation at various time points
+     - 45° angle verification (equal X and Y displacement)
+     - Position wrapping within bounds
+     - Custom tolerance for angle verification
+     - Animator lifecycle (start, stop, reset)
+     - State management and getters
+     - requestAnimationFrame usage verification
+     - Animation frame cancellation on stop
+   - Tests verify 45° trajectory throughout animation
+   - Tests validate position calculations with multiple scenarios
+
+### Codebase Patterns (Updated):
+
+#### Animation Pattern:
+- **requestAnimationFrame**: Smooth 60fps animation updates
+- **Performance API**: Uses `performance.now()` for precise timing
+- **Configurable bounds**: maxX and maxY for position normalization
+- **Callback pattern**: Optional `onPositionUpdate` callback for external updates
+
+#### 45° Angle Implementation:
+- Uses trigonometric calculation: `diagonalFactor = √2/2 ≈ 0.7071`
+- Equal displacement in X and Y directions
+- Position normalized to bounds using modulo arithmetic
+- Math.round for clean position values
+
+#### Class Design:
+- Encapsulated state management
+- Immutable position getters (return copies)
+- Clean start/stop/reset lifecycle
+- Private animation loop with arrow function for `this` binding
+
+#### Testing Patterns:
+- Mock verification for requestAnimationFrame/cancelAnimationFrame
+- Multiple time point testing for position calculations
+- Ratio verification for 45° angle (X/Y ratio ≈ 1)
+- State transition testing
+
+### Verification Results:
+- Typecheck: ✅ PASSED (0 errors)
+- Tests: ✅ 71 tests passed (38 existing + 33 new)
+- All acceptance criteria: ✅ MET
+
 ### Next Steps (for future stories):
-- Story 3: Implement linear animation at 45° angle
-- Story 4: Add canvas or CSS-based rendering
-- Story 5: Integrate with existing HTML pages
+- Story 4: Integrate animator with gradient rendering
+- Story 5: Apply animated gradient to HTML pages
+- Story 6: Add configuration options for speed and colors
