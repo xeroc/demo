@@ -271,7 +271,8 @@ describe('BackgroundComponent', () => {
       component.mount();
       
       const background = container.style.background;
-      expect(background).toContain('#112233');
+      // Colors are converted to rgb format by the browser
+      expect(background).toContain('rgb(17, 34, 51)');
       
       component.unmount();
     });
@@ -352,5 +353,215 @@ describe('DEFAULT_BACKGROUND_CONFIG', () => {
 
   it('should have valid default speed', () => {
     expect(DEFAULT_BACKGROUND_CONFIG.speed).toBeGreaterThan(0);
+  });
+});
+
+describe('Configuration options', () => {
+  let container: HTMLElement;
+
+  beforeEach(() => {
+    container = document.createElement('div');
+    document.body.appendChild(container);
+  });
+
+  afterEach(() => {
+    if (container.parentNode) {
+      document.body.removeChild(container);
+    }
+  });
+
+  describe('colors configuration', () => {
+    it('should accept custom colors array', () => {
+      const customColors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00'];
+      const component = new BackgroundComponent({ 
+        container,
+        colors: customColors 
+      });
+      
+      const config = component.getConfig();
+      expect(config.colors).toEqual(customColors);
+    });
+
+    it('should use default colors when not specified', () => {
+      const component = new BackgroundComponent({ container });
+      const config = component.getConfig();
+      
+      expect(config.colors).toEqual(DEFAULT_BACKGROUND_CONFIG.colors);
+    });
+
+    it('should validate colors format', () => {
+      const validColors = ['#fff', '#000000', '#aBc123'];
+      const component = new BackgroundComponent({ 
+        container,
+        colors: validColors 
+      });
+      
+      const config = component.getConfig();
+      expect(config.colors).toEqual(validColors);
+    });
+
+    it('should allow updating colors after initialization', () => {
+      const component = new BackgroundComponent({ container });
+      component.mount();
+      
+      const newColors = ['#111111', '#222222'];
+      component.updateConfig({ colors: newColors });
+      
+      const config = component.getConfig();
+      expect(config.colors).toEqual(newColors);
+      
+      component.unmount();
+    });
+  });
+
+  describe('animation speed configuration', () => {
+    it('should accept custom speed value', () => {
+      const customSpeed = 250;
+      const component = new BackgroundComponent({ 
+        container,
+        speed: customSpeed 
+      });
+      
+      const config = component.getConfig();
+      expect(config.speed).toBe(customSpeed);
+    });
+
+    it('should use default speed when not specified', () => {
+      const component = new BackgroundComponent({ container });
+      const config = component.getConfig();
+      
+      expect(config.speed).toBe(DEFAULT_BACKGROUND_CONFIG.speed);
+    });
+
+    it('should allow updating speed after initialization', () => {
+      const component = new BackgroundComponent({ 
+        container,
+        speed: 100 
+      });
+      component.mount();
+      
+      const newSpeed = 300;
+      component.updateConfig({ speed: newSpeed });
+      
+      const config = component.getConfig();
+      expect(config.speed).toBe(newSpeed);
+      
+      component.unmount();
+    });
+
+    it('should handle different speed values', () => {
+      const speeds = [50, 100, 200, 500, 1000];
+      
+      speeds.forEach(speed => {
+        const component = new BackgroundComponent({ container, speed });
+        const config = component.getConfig();
+        expect(config.speed).toBe(speed);
+      });
+    });
+  });
+
+  describe('gradient angle configuration', () => {
+    it('should accept custom angle value', () => {
+      const customAngle = 90;
+      const component = new BackgroundComponent({ 
+        container,
+        angle: customAngle 
+      });
+      
+      const config = component.getConfig();
+      expect(config.angle).toBe(customAngle);
+    });
+
+    it('should use default angle when not specified', () => {
+      const component = new BackgroundComponent({ container });
+      const config = component.getConfig();
+      
+      expect(config.angle).toBe(DEFAULT_BACKGROUND_CONFIG.angle);
+    });
+
+    it('should allow updating angle after initialization', () => {
+      const component = new BackgroundComponent({ 
+        container,
+        angle: 0 
+      });
+      component.mount();
+      
+      const newAngle = 180;
+      component.updateConfig({ angle: newAngle });
+      
+      const config = component.getConfig();
+      expect(config.angle).toBe(newAngle);
+      
+      component.unmount();
+    });
+
+    it('should handle different angle values', () => {
+      const angles = [0, 45, 90, 180, 270, 360];
+      
+      angles.forEach(angle => {
+        const component = new BackgroundComponent({ container, angle });
+        const config = component.getConfig();
+        expect(config.angle).toBe(angle);
+      });
+    });
+  });
+
+  describe('configuration parsing', () => {
+    it('should merge partial config with defaults', () => {
+      const partialConfig = {
+        speed: 200
+      };
+      
+      const component = new BackgroundComponent({ 
+        container,
+        ...partialConfig 
+      });
+      
+      const config = component.getConfig();
+      expect(config.speed).toBe(200);
+      expect(config.colors).toEqual(DEFAULT_BACKGROUND_CONFIG.colors);
+      expect(config.angle).toBe(DEFAULT_BACKGROUND_CONFIG.angle);
+    });
+
+    it('should override all defaults when full config provided', () => {
+      const fullConfig = {
+        colors: ['#111', '#222', '#333'],
+        speed: 500,
+        angle: 135,
+        container
+      };
+      
+      const component = new BackgroundComponent(fullConfig);
+      const config = component.getConfig();
+      
+      expect(config.colors).toEqual(fullConfig.colors);
+      expect(config.speed).toBe(fullConfig.speed);
+      expect(config.angle).toBe(fullConfig.angle);
+    });
+  });
+
+  describe('default fallbacks', () => {
+    it('should fall back to defaults for undefined values', () => {
+      const component = new BackgroundComponent({ 
+        container,
+        colors: undefined as any,
+        speed: undefined as any,
+        angle: undefined as any
+      });
+      
+      const config = component.getConfig();
+      expect(config.colors).toEqual(DEFAULT_BACKGROUND_CONFIG.colors);
+      expect(config.speed).toBe(DEFAULT_BACKGROUND_CONFIG.speed);
+      expect(config.angle).toBe(DEFAULT_BACKGROUND_CONFIG.angle);
+    });
+
+    it('should use defaults when empty config provided', () => {
+      const component = new BackgroundComponent({});
+      const config = component.getConfig();
+      
+      expect(config.colors).toEqual(DEFAULT_BACKGROUND_CONFIG.colors);
+      expect(config.speed).toBe(DEFAULT_BACKGROUND_CONFIG.speed);
+      expect(config.angle).toBe(DEFAULT_BACKGROUND_CONFIG.angle);
+    });
   });
 });

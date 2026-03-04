@@ -43,10 +43,8 @@ export class BackgroundComponent {
     if (this.isMounted) return;
 
     this.isMounted = true;
-    this.initializeAnimator();
-    if (this.animator) {
-      this.animator.start();
-    }
+    this.animator = this.createAnimator();
+    this.animator.start();
   }
 
   /**
@@ -56,7 +54,7 @@ export class BackgroundComponent {
   unmount(): void {
     if (!this.isMounted) return;
 
-    if (this.animator) {
+    if (this.animator !== null) {
       this.animator.stop();
     }
     this.animator = null;
@@ -81,28 +79,38 @@ export class BackgroundComponent {
   }
 
   /**
+   * Get current configuration
+   */
+  getConfig(): BackgroundComponentConfig {
+    return { ...this.config };
+  }
+
+  /**
    * Update gradient configuration
    */
   updateConfig(config: Partial<BackgroundComponentConfig>): void {
     this.config = { ...this.config, ...config };
     
     if (this.isMounted) {
-      const wasRunning = this.animator?.getIsRunning() ?? false;
-      if (this.animator) {
+      const wasRunning = this.animator !== null && this.animator.getIsRunning();
+      
+      if (this.animator !== null) {
         this.animator.stop();
       }
+      
       this.animator = null;
-      this.initializeAnimator();
-      if (this.animator && wasRunning) {
+      this.animator = this.createAnimator();
+      
+      if (wasRunning && this.animator !== null) {
         this.animator.start();
       }
     }
   }
 
   /**
-   * Initialize the animator with current configuration
+   * Create animator with current configuration
    */
-  private initializeAnimator(): void {
+  private createAnimator(): GradientPositionAnimator {
     const animatorConfig: AnimatorConfig = {
       speed: this.config.speed,
       maxX: 2000,
@@ -110,7 +118,7 @@ export class BackgroundComponent {
       onPositionUpdate: (x: number, _y: number) => this.updateGradient(x)
     };
 
-    this.animator = new GradientPositionAnimator(animatorConfig);
+    return new GradientPositionAnimator(animatorConfig);
   }
 
   /**
