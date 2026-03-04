@@ -11,5 +11,5 @@ if (typeof document !== 'undefined') {
   });
 }
 
-export { initAnimatedBackground } from './index';
+export { initAnimatedBackground, getActiveBackgroundComponent, cleanupAnimatedBackground } from './index';
 export type { GradientConfig } from './index';
