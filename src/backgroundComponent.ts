@@ -31,7 +31,11 @@ export class BackgroundComponent {
   private isMounted: boolean = false;
 
   constructor(config: Partial<BackgroundComponentConfig> = {}) {
-    this.config = { ...DEFAULT_BACKGROUND_CONFIG, ...config };
+    // Filter out undefined values to allow defaults to be used
+    const filteredConfig = Object.fromEntries(
+      Object.entries(config).filter(([_, value]) => value !== undefined)
+    );
+    this.config = { ...DEFAULT_BACKGROUND_CONFIG, ...filteredConfig };
     this.container = this.config.container || document.body;
   }
 
@@ -89,7 +93,11 @@ export class BackgroundComponent {
    * Update gradient configuration
    */
   updateConfig(config: Partial<BackgroundComponentConfig>): void {
-    this.config = { ...this.config, ...config };
+    // Filter out undefined values when updating
+    const filteredConfig = Object.fromEntries(
+      Object.entries(config).filter(([_, value]) => value !== undefined)
+    );
+    this.config = { ...this.config, ...filteredConfig };
     
     if (this.isMounted) {
       const wasRunning = this.animator !== null && this.animator.getIsRunning();
