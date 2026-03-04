@@ -21,3 +21,15 @@ export function initAnimatedBackground(config: GradientConfig = DEFAULT_CONFIG):
   // Implementation will be added in subsequent stories
   console.log('Animated background initialized', config);
 }
+
+// Re-export types and utilities
+export type { ConicGradientOptions } from './conicGradient';
+export { createConicGradient } from './conicGradient';
+export type { AnimatorConfig, AnimatorState } from './gradientAnimator';
+export { DEFAULT_ANIMATOR_CONFIG } from './gradientAnimator';
+export type { BackgroundComponentConfig } from './backgroundComponent';
+export { 
+  BackgroundComponent,
+  DEFAULT_BACKGROUND_CONFIG,
+  createAnimatedBackground 
+} from './backgroundComponent';
