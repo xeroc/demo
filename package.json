@@ -1,0 +1,20 @@
+{
+  "name": "chaoscraft-animated-background",
+  "version": "1.0.0",
+  "description": "Animated background with conic gradient moving at 45 degrees",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "jsdom": "^28.1.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.11",
+    "vitest": "^1.2.0"
+  }
+}

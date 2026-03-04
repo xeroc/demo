@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <style>
+        .contact-form {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .success {
+            color: green;
+            padding: 15px;
+            background-color: #d4edda;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="contact-form">
+        <h1>Contact Us</h1>
+        
+        <div id="success-message" class="success" style="display: none;">
+            Thank you for your message! We'll get back to you soon.
+        </div>
+        
+        <form id="contactForm" method="POST" action="/api/contact">
+            <!-- Honeypot field for spam protection -->
+            <input type="text" name="website" style="display: none;" tabindex="-1" autocomplete="off">
+            
+            <div class="form-group">
+                <label for="fullName">Full Name *</label>
+                <input type="text" id="fullName" name="fullName" required 
+                       minlength="2" maxlength="100"
+                       placeholder="Enter your full name">
+                <div id="fullName-error" class="error"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="email" required
+                       maxlength="254"
+                       placeholder="Enter your email address">
+                <div id="email-error" class="error"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="subject">Subject *</label>
+                <input type="text" id="subject" name="subject" required
+                       minlength="5" maxlength="200"
+                       placeholder="What is this about?">
+                <div id="subject-error" class="error"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="body">Message *</label>
+                <textarea id="body" name="body" required
+                          minlength="10" maxlength="5000"
+                          placeholder="Write your message here..."></textarea>
+                <div id="body-error" class="error"></div>
+            </div>
+            
+            <button type="submit">Send Message</button>
+        </form>
+    </div>
+    
+    <script>
+        // Client-side form validation
+        const form = document.getElementById('contactForm');
+        const successMessage = document.getElementById('success-message');
+        
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        function showError(fieldId, message) {
+            document.getElementById(fieldId + '-error').textContent = message;
+        }
+        
+        function clearErrors() {
+            document.querySelectorAll('.error').forEach(el => el.textContent = '');
+        }
+        
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearErrors();
+            
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const subject = document.getElementById('subject').value.trim();
+            const body = document.getElementById('body').value.trim();
+            
+            let isValid = true;
+            
+            // Validate full name
+            if (fullName.length < 2) {
+                showError('fullName', 'Full name must be at least 2 characters');
+                isValid = false;
+            } else if (fullName.length > 100) {
+                showError('fullName', 'Full name must not exceed 100 characters');
+                isValid = false;
+            }
+            
+            // Validate email
+            if (!validateEmail(email)) {
+                showError('email', 'Please enter a valid email address');
+                isValid = false;
+            }
+            
+            // Validate subject
+            if (subject.length < 5) {
+                showError('subject', 'Subject must be at least 5 characters');
+                isValid = false;
+            } else if (subject.length > 200) {
+                showError('subject', 'Subject must not exceed 200 characters');
+                isValid = false;
+            }
+            
+            // Validate body
+            if (body.length < 10) {
+                showError('body', 'Message must be at least 10 characters');
+                isValid = false;
+            } else if (body.length > 5000) {
+                showError('body', 'Message must not exceed 5000 characters');
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            // Submit form
+            const formData = { fullName, email, subject, body };
+            
+            try {
+                const response = await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                if (response.ok) {
+                    successMessage.style.display = 'block';
+                    form.reset();
+                    window.scrollTo(0, 0);
+                } else {
+                    const error = await response.json();
+                    alert('Error: ' + (error.message || 'Failed to send message'));
+                }
+            } catch (error) {
+                alert('Error: Unable to send message. Please try again later.');
+            }
+        });
+        
+        // Real-time validation feedback
+        document.getElementById('fullName').addEventListener('blur', function() {
+            const value = this.value.trim();
+            if (value.length > 0 && value.length < 2) {
+                showError('fullName', 'Full name must be at least 2 characters');
+            } else {
+                showError('fullName', '');
+            }
+        });
+        
+        document.getElementById('email').addEventListener('blur', function() {
+            const value = this.value.trim();
+            if (value.length > 0 && !validateEmail(value)) {
+                showError('email', 'Please enter a valid email address');
+            } else {
+                showError('email', '');
+            }
+        });
+    </script>
+</body>
+</html>
