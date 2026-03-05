@@ -1,0 +1,131 @@
+/**
+ * Dancing Robot CSS Animations
+ * 
+ * Keyframe animations for the dancing robot SVG.
+ * These animations create a smooth, looping dance effect.
+ */
+
+/* Body bounce - main vertical movement */
+@keyframes robot-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Left arm swing - moves up and down */
+@keyframes robot-arm-left {
+  0%, 100% {
+    transform: rotate(-10deg);
+  }
+  25% {
+    transform: rotate(-45deg);
+  }
+  75% {
+    transform: rotate(15deg);
+  }
+}
+
+/* Right arm swing - opposite to left arm */
+@keyframes robot-arm-right {
+  0%, 100% {
+    transform: rotate(10deg);
+  }
+  25% {
+    transform: rotate(45deg);
+  }
+  75% {
+    transform: rotate(-15deg);
+  }
+}
+
+/* Head bob - slight tilt side to side */
+@keyframes robot-head {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-5deg);
+  }
+  75% {
+    transform: rotate(5deg);
+  }
+}
+
+/* Left leg movement - stepping motion */
+@keyframes robot-leg-left {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-5deg);
+  }
+  75% {
+    transform: rotate(5deg);
+  }
+}
+
+/* Right leg movement - opposite to left leg */
+@keyframes robot-leg-right {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(5deg);
+  }
+  75% {
+    transform: rotate(-5deg);
+  }
+}
+
+/* Eye glow effect - pulsing opacity */
+@keyframes robot-eye-glow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Animation classes applied to robot body parts */
+
+.robot-body-group {
+  animation: robot-bounce 0.6s ease-in-out infinite;
+}
+
+.robot-arm-left {
+  transform-origin: 70px 130px;
+  animation: robot-arm-left 0.6s ease-in-out infinite;
+}
+
+.robot-arm-right {
+  transform-origin: 130px 130px;
+  animation: robot-arm-right 0.6s ease-in-out infinite;
+}
+
+.robot-head {
+  transform-origin: 100px 70px;
+  animation: robot-head 0.6s ease-in-out infinite;
+}
+
+.robot-leg-left {
+  transform-origin: 80px 220px;
+  animation: robot-leg-left 0.3s ease-in-out infinite;
+}
+
+.robot-leg-right {
+  transform-origin: 120px 220px;
+  animation: robot-leg-right 0.3s ease-in-out infinite;
+}
+
+.robot-eye {
+  animation: robot-eye-glow 1s ease-in-out infinite;
+}
+
+/* Dancing robot container class */
+.dancing-robot {
+  display: inline-block;
+}

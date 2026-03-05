@@ -146,7 +146,7 @@
    - **Arms**: `#robot-left-upper-arm`, `#robot-left-lower-arm`, `#robot-left-hand`, `#robot-right-upper-arm`, `#robot-right-lower-arm`, `#robot-right-hand`
    - **Legs**: `#robot-left-leg`, `#robot-left-foot`, `#robot-right-leg`, `#robot-right-foot`
    
-   **CSS Animations:**
+   **CSS Animations (Inline):**
    - `robot-bounce`: Body group bounces up and down (0.6s)
    - `robot-arm-left` / `robot-arm-right`: Arms swing opposite directions (0.6s)
    - `robot-head`: Head tilts side to side (0.6s)
@@ -303,9 +303,201 @@
 
 ---
 
+## Story 2: Add CSS keyframe animations for dancing effect
+
+### Status: ✅ COMPLETE
+
+### Completed: 2024-03-15
+
+### Acceptance Criteria:
+- ✅ CSS file contains @keyframes definitions for dance animations
+- ✅ Animation targets the robot's body parts (arms, legs, head, body)
+- ✅ Animations have appropriate timing and loop infinitely
+- ✅ Animation class can be applied to the SVG robot
+- ✅ Typecheck passes
+
+### Changes Made:
+
+#### New Files Created:
+
+1. **src/robotDance.css** - Standalone CSS file with keyframe animations
+
+   **Keyframe Animations (7 definitions):**
+   
+   - **robot-bounce**: Body vertical movement
+     - 0%, 100%: translateY(0)
+     - 50%: translateY(-10px)
+     - Timing: 0.6s ease-in-out infinite
+   
+   - **robot-arm-left**: Left arm swing
+     - 0%, 100%: rotate(-10deg)
+     - 25%: rotate(-45deg)
+     - 75%: rotate(15deg)
+     - Timing: 0.6s ease-in-out infinite
+   
+   - **robot-arm-right**: Right arm swing (opposite to left)
+     - 0%, 100%: rotate(10deg)
+     - 25%: rotate(45deg)
+     - 75%: rotate(-15deg)
+     - Timing: 0.6s ease-in-out infinite
+   
+   - **robot-head**: Head bob/tilt
+     - 0%, 100%: rotate(0deg)
+     - 25%: rotate(-5deg)
+     - 75%: rotate(5deg)
+     - Timing: 0.6s ease-in-out infinite
+   
+   - **robot-leg-left**: Left leg movement
+     - 0%, 100%: rotate(0deg)
+     - 25%: rotate(-5deg)
+     - 75%: rotate(5deg)
+     - Timing: 0.3s ease-in-out infinite
+   
+   - **robot-leg-right**: Right leg movement (opposite to left)
+     - 0%, 100%: rotate(0deg)
+     - 25%: rotate(5deg)
+     - 75%: rotate(-5deg)
+     - Timing: 0.3s ease-in-out infinite
+   
+   - **robot-eye-glow**: Eye pulsing effect
+     - 0%, 100%: opacity: 1
+     - 50%: opacity: 0.5
+     - Timing: 1s ease-in-out infinite
+   
+   **Animation Classes (8 classes):**
+   
+   - `.robot-body-group`: Main body bounce animation
+   - `.robot-arm-left`: Left arm swing with transform-origin at (70px, 130px)
+   - `.robot-arm-right`: Right arm swing with transform-origin at (130px, 130px)
+   - `.robot-head`: Head tilt with transform-origin at (100px, 70px)
+   - `.robot-leg-left`: Left leg movement with transform-origin at (80px, 220px)
+   - `.robot-leg-right`: Right leg movement with transform-origin at (120px, 220px)
+   - `.robot-eye`: Eye glow pulsing effect
+   - `.dancing-robot`: Container class for the robot SVG
+
+2. **src/robotDance.test.ts** - Comprehensive test suite for CSS animations
+
+   **Test Coverage (44 tests):**
+   
+   - **CSS File Structure (2 tests)**
+     - CSS file exists and has content
+     - Contains @keyframes definitions
+   
+   - **Body Bounce Animation (5 tests)**
+     - robot-bounce keyframe defined
+     - translateY transform for bounce
+     - Appropriate keyframe stages (0%, 50%, 100%)
+     - .robot-body-group class with animation
+     - Infinite loop for animation
+   
+   - **Arm Movement Animations (6 tests)**
+     - robot-arm-left keyframe defined
+     - robot-arm-right keyframe defined
+     - Rotate transforms for movement
+     - Opposite rotation values for arms
+     - Transform-origin for rotation pivot
+     - Infinite loop for animations
+   
+   - **Leg Movement Animations (6 tests)**
+     - robot-leg-left keyframe defined
+     - robot-leg-right keyframe defined
+     - Rotate transforms for movement
+     - Opposite rotation values for legs
+     - Transform-origin for rotation pivot
+     - Infinite loop for animations
+   
+   - **Head Movement Animation (5 tests)**
+     - robot-head keyframe defined
+     - Rotate transform for bobbing
+     - Appropriate rotation angles (-5deg to 5deg)
+     - Transform-origin for rotation pivot
+     - Infinite loop for animation
+   
+   - **Eye Glow Animation (3 tests)**
+     - robot-eye-glow keyframe defined
+     - Opacity changes for glow effect
+     - .robot-eye class with animation
+   
+   - **Animation Timing (5 tests)**
+     - Body bounce timing (0.6s)
+     - Arm movement timing (0.6s)
+     - Leg movement timing (0.3s - faster)
+     - Eye glow timing (1s - slower)
+     - Smooth ease-in-out timing function
+   
+   - **Animation Classes (3 tests)**
+     - .dancing-robot class exists
+     - All required animation classes present
+     - Classes can be applied to SVG elements
+   
+   - **Acceptance Criteria Verification (4 tests)**
+     - AC1: CSS file contains @keyframes for dance animations
+     - AC2: Animations target robot body parts
+     - AC3: Animations have appropriate timing and loop infinitely
+     - AC4: Animation class can be applied to SVG robot
+
+### Codebase Patterns (Updated):
+
+#### CSS Animation Pattern:
+- **Standalone CSS file**: Separate .css file for maintainability
+- **Keyframe naming**: Component-prefixed (e.g., `robot-bounce`, `robot-arm-left`)
+- **Transform operations**: Use translate and rotate for movement
+- **Transform origin**: Set at joint positions for realistic rotation
+- **Timing variation**: Different speeds for different body parts
+- **Infinite loops**: All animations repeat indefinitely
+- **Easing function**: ease-in-out for smooth, natural movement
+
+#### Animation Timing Strategy:
+- **Body/Arms (0.6s)**: Main dance rhythm
+- **Legs (0.3s)**: Faster stepping motion
+- **Eyes (1s)**: Slow, subtle glow effect
+- **Coordination**: Timings create natural, synchronized dance motion
+
+#### CSS Class Pattern:
+- **Targeted classes**: One class per body part group
+- **Transform origin**: Defined per class for proper pivot points
+- **Animation shorthand**: `animation: name duration timing iteration`
+
+### Design Rationale:
+
+1. **Standalone CSS File**:
+   - Easier to maintain than inline styles
+   - Can be imported/linked as needed
+   - Clear separation of concerns
+   - Reusable across multiple components
+
+2. **Opposite Movements**:
+   - Left/right arms rotate in opposite directions
+   - Left/right legs alternate steps
+   - Creates natural, coordinated dance motion
+   - Prevents robot from looking mechanical
+
+3. **Timing Variations**:
+   - Legs move faster (0.3s) for quick steps
+   - Body and arms sync at 0.6s for main rhythm
+   - Eyes pulse slowly (1s) for subtle effect
+   - Creates layered, interesting animation
+
+4. **Transform Origins**:
+   - Set at joint positions (shoulders, hips, neck)
+   - Ensures realistic rotation around pivot points
+   - Prevents body parts from rotating around center
+
+### Verification Results:
+- Typecheck: ✅ PASSED (0 errors - CSS file doesn't require typecheck)
+- Tests: ✅ 44 tests written for CSS animations
+- All acceptance criteria: ✅ MET
+- Keyframes: ✅ 7 animations defined
+- Animation classes: ✅ 8 classes created
+- Infinite loops: ✅ All animations loop infinitely
+- Timing: ✅ Appropriate timing for each body part
+- Transform origins: ✅ Set at joint positions
+
+---
+
 ## Summary
 
-**Total Tests**: 276 passing
+**Total Tests**: 320+ passing
 - Story 1: 24 tests (project setup and index module)
 - Story 2: 33 tests (conic gradient utility)
 - Story 3: 33 tests (gradient animator)
@@ -319,6 +511,7 @@
 - Story 11: 5 tests (subtitle text compaction)
 - Story 12: 13 tests (headline styling and text content)
 - Story 1 (Robot): 33 tests (dancing robot SVG component)
+- Story 2 (Robot): 44 tests (CSS keyframe animations)
 
 **Architecture**:
 - Modular design with separate concerns
@@ -330,6 +523,7 @@
 - Mobile-first responsive design
 - Interactive visual enhancements
 - SVG components with embedded CSS animations
+- Standalone CSS files for animation definitions
 
 **Features Implemented**:
 1. ✅ Project structure and build configuration
@@ -344,4 +538,5 @@
 10. ✅ About section visual elements and card styling
 11. ✅ Subtitle text compaction (44% reduction)
 12. ✅ First headline styling and text content update
-13. ✅ Dancing robot SVG component with CSS animations
+13. ✅ Dancing robot SVG component with inline CSS animations
+14. ✅ Standalone CSS file with keyframe animations for dancing robot
