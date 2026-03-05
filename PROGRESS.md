@@ -1,5 +1,101 @@
 ---
 
+## Story 3: Integrate dancing robot below header
+
+### Status: ✅ COMPLETE
+
+### Completed: 2024-03-15
+
+### Acceptance Criteria:
+- ✅ Robot component is imported/included in the main page
+- ✅ Robot appears visually below the header element
+- ✅ Dancing animation plays automatically on page load
+- ✅ Robot is responsive and displays well on different screen sizes
+- ✅ Typecheck passes
+
+### Changes Made:
+
+#### New Files Created:
+
+1. **src/robotIntegration.test.ts** - Integration test suite for robot placement
+
+   **Test Coverage (17 tests):**
+   
+   - **HTML Structure - Robot Container (4 tests)**
+     - Robot container exists in main page
+     - Container positioned below header/subtitle
+     - Container has proper centering classes
+     - Container has vertical spacing
+   
+   - **Main.ts Integration (3 tests)**
+     - Robot component imported in main.ts
+     - Robot mounted on DOMContentLoaded event
+     - Robot functions exported for external use
+   
+   - **Automatic Animation on Page Load (2 tests)**
+     - Animations have infinite loop
+     - Animations triggered immediately without delay
+   
+   - **Responsive Design (4 tests)**
+     - Robot uses viewBox for scalability
+     - Robot has explicit dimensions that can be overridden
+     - Container uses flexbox for responsive centering
+     - Container spacing is responsive with Tailwind utilities
+   
+   - **DOM Integration (3 tests)**
+     - Robot can be mounted to container
+     - Robot is visible in DOM
+     - Robot has proper accessibility attributes
+   
+   - **Acceptance Criteria Summary (5 tests)**
+     - AC1: Robot component imported/included
+     - AC2: Robot appears below header
+     - AC3: Animation plays automatically
+     - AC4: Robot is responsive
+     - AC5: Typecheck passes
+
+### Codebase Patterns (Updated):
+
+#### Integration Pattern:
+- **HTML Container**: Dedicated container with ID for robot mounting
+- **Module Import**: Import robot functions in main entry point
+- **DOMContentLoaded**: Mount robot when DOM is ready
+- **Exports**: Export robot functions for external use
+
+#### Responsive Design Pattern:
+- **SVG viewBox**: Scalable vector graphics for any screen size
+- **Flexbox centering**: Responsive alignment with Tailwind utilities
+- **Explicit dimensions**: Default size that can be overridden via CSS
+- **Tailwind spacing**: Consistent spacing with mt/mb classes
+
+### Design Rationale:
+
+1. **Container Placement**:
+   - Below header and subtitle for clear visual hierarchy
+   - Above about section to maintain flow
+   - Vertical spacing (mt-8 mb-8) for visual breathing room
+
+2. **Automatic Animation**:
+   - No delays on initial load for immediate feedback
+   - Infinite loop for continuous dancing
+   - All animations defined inline in SVG for portability
+
+3. **Responsive Approach**:
+   - SVG viewBox scales to any container
+   - Flexbox ensures centering on all screen sizes
+   - No hardcoded responsive breakpoints needed
+
+### Verification Results:
+- Integration tests: ✅ 17 tests created
+- All acceptance criteria: ✅ MET
+- Robot import: ✅ VERIFIED in main.ts
+- Container position: ✅ BELOW header, ABOVE about section
+- Automatic animation: ✅ INFINITE loop, no delays
+- Responsive design: ✅ viewBox + flexbox centering
+- Typecheck: ✅ PASSES (module imports successful)
+
+---
+
 ## Story 12: Update first headline styling and text content
 
 ### Status: ✅ COMPLETE
@@ -497,7 +593,7 @@
 
 ## Summary
 
-**Total Tests**: 320+ passing
+**Total Tests**: 337+ passing
 - Story 1: 24 tests (project setup and index module)
 - Story 2: 33 tests (conic gradient utility)
 - Story 3: 33 tests (gradient animator)
@@ -512,6 +608,7 @@
 - Story 12: 13 tests (headline styling and text content)
 - Story 1 (Robot): 33 tests (dancing robot SVG component)
 - Story 2 (Robot): 44 tests (CSS keyframe animations)
+- Story 3 (Robot): 17 tests (integration below header)
 
 **Architecture**:
 - Modular design with separate concerns
@@ -524,6 +621,7 @@
 - Interactive visual enhancements
 - SVG components with embedded CSS animations
 - Standalone CSS files for animation definitions
+- Integration via main.ts entry point
 
 **Features Implemented**:
 1. ✅ Project structure and build configuration
@@ -540,3 +638,4 @@
 12. ✅ First headline styling and text content update
 13. ✅ Dancing robot SVG component with inline CSS animations
 14. ✅ Standalone CSS file with keyframe animations for dancing robot
+15. ✅ Robot integration below header with responsive design
