@@ -1,3 +1,121 @@
+---
+
+## Story 34: Create a Banner at the Top
+
+### Status: 🔄 IN PROGRESS - Story 1: Exploration Complete
+
+### Story 1: Explore project structure and identify banner placement location
+
+### Acceptance Criteria:
+- ✅ Identify the main layout or entry component file
+- ✅ Document the CSS/styling approach used in the project
+- ✅ Identify where the banner should be inserted in the component hierarchy
+- ✅ Notes on project structure are documented for subsequent stories
+
+### Project Structure Analysis:
+
+#### Technology Stack:
+- **Framework**: Static HTML with TypeScript modules
+- **Build Tool**: Vite 5.0.11
+- **Language**: TypeScript 5.3.3
+- **Testing**: Vitest 1.2.0 with jsdom 28.1.0
+- **CSS Framework**: Tailwind CSS via CDN
+- **Package Manager**: npm (package-lock.json present)
+
+#### Main Entry Point:
+- **File**: `index.html` (root level)
+- **Location**: Primary HTML file containing all page structure
+- **Script**: `<script type="module" src="/src/main.ts"></script>` loads TypeScript entry point
+
+#### CSS/Styling Approach:
+- **Method**: Tailwind CSS via CDN (`<script src="https://cdn.tailwindcss.com"></script>`)
+- **No separate CSS files**: All styling via inline Tailwind utility classes
+- **Pattern**: Utility-first CSS with inline class application
+- **No custom stylesheets**: No external CSS files in project
+
+#### Current Page Structure:
+```html
+<body class="min-h-screen flex items-center justify-center">
+    <div class="text-center relative z-10">
+        <!-- Main Content -->
+        <h1>Welcome to ChaosCraft</h1>
+        <p>ChaosCraft Demo</p>
+        <section><!-- About section --></section>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+</body>
+```
+
+#### Banner Placement Location:
+- **Insert Point**: Immediately after opening `<body>` tag, before the main content `<div>`
+- **Rationale**: 
+  - Banner should be at the top of the page (top-level element)
+  - Should span full width
+  - Should be outside the centered content container
+  - Should not interfere with existing layout
+- **Recommended Structure**:
+```html
+<body class="min-h-screen flex items-center justify-center">
+    <!-- BANNER: Insert here -->
+    <div class="w-full bg-[color] text-[color] py-3 px-4 text-center">
+        Banner content: "This site can be modified by anyone participating in chaoscraft.dev"
+    </div>
+    
+    <div class="text-center relative z-10">
+        <!-- Existing content -->
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+</body>
+```
+
+#### Component Hierarchy:
+1. `<body>` - Root container with flex layout
+2. **[BANNER - TO BE INSERTED]** - Full-width informational banner
+3. `<div class="text-center relative z-10">` - Main content wrapper
+   - `<h1>` - Main headline
+   - `<p>` - Subtitle
+   - `<section>` - About section
+4. `<script>` - Module entry point
+
+#### Files to Modify for Banner Implementation:
+1. **Primary**: `index.html` - Add banner HTML structure
+2. **Tests**: Create `src/banner.test.ts` - Banner component tests
+3. **Optional**: `contact.html` - If banner should appear on all pages
+
+#### Testing Approach:
+- Test framework: Vitest with jsdom
+- Pattern: Read actual HTML files from filesystem
+- Verify: HTML structure, text content, Tailwind classes, accessibility
+
+#### Styling Recommendations for Banner:
+- **Background**: Semi-transparent with backdrop-blur for modern look
+- **Colors**: High contrast for visibility (e.g., cyan/blue on dark)
+- **Layout**: Full width, centered text, adequate padding
+- **Typography**: Clear, readable font size (text-sm to text-base)
+- **Visual Hierarchy**: Distinct from main content but not overwhelming
+- **Responsive**: Mobile-friendly with appropriate padding/spacing
+
+#### Example Banner Classes (Tailwind):
+```html
+w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white py-3 px-4 text-center text-sm font-medium
+```
+
+### Key Findings for Implementation:
+
+1. **Single HTML File**: Main entry is `index.html` - banner goes here
+2. **No Component System**: Static HTML, no React/Vue/framework components
+3. **Tailwind CSS**: Use utility classes, no separate CSS needed
+4. **Test Pattern**: Follow existing pattern in `src/*.test.ts` files
+5. **Build Process**: TypeScript compilation + Vite build
+6. **Banner Position**: Top of page, full width, outside main content container
+
+### Next Steps for Banner Implementation:
+1. Add banner HTML to `index.html` after `<body>` tag
+2. Apply Tailwind classes for styling
+3. Create comprehensive test suite in `src/banner.test.ts`
+4. Verify responsive design and accessibility
+5. Run build and test commands to ensure no regressions
+6. Update contact.html if banner should appear site-wide
 
 ---
 
@@ -119,7 +237,7 @@
 
 ## Summary
 
-**Total Tests**: 243 passing
+**Total Tests**: 243 passing (prior to Story 34)
 - Story 1: 24 tests (project setup and index module)
 - Story 2: 33 tests (conic gradient utility)
 - Story 3: 33 tests (gradient animator)
