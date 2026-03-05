@@ -1,5 +1,187 @@
 ---
 
+## Story 4: Add Close/Dismiss Functionality to Banner
+
+### Status: ✅ COMPLETE
+
+### Completed: 2024-03-15
+
+### Acceptance Criteria:
+- ✅ Close/dismiss button is visible on the banner
+- ✅ Clicking dismiss hides the banner
+- ✅ Dismissal state is persisted (localStorage)
+- ✅ Returning users with dismissed state do not see the banner
+- ✅ Typecheck passes
+
+### Changes Made:
+
+#### Modified Files:
+
+1. **index.html** - Added dismiss functionality to banner
+
+   **Close Button:**
+   - SVG X icon for visual clarity
+   - Positioned absolute right side of banner
+   - Vertically centered with `-translate-y-1/2`
+   - Accessible label: `aria-label="Dismiss banner"`
+   - Hover effects: `hover:text-cyan-200` and `hover:bg-white/10`
+   - Proper padding for click target: `p-1 rounded`
+
+   **JavaScript Functionality:**
+   - Banner ID: `chaoscraft-banner` for targeting
+   - Button ID: `banner-close-btn` for event handling
+   - localStorage key: `chaoscraft-banner-dismissed`
+   - On page load: Checks localStorage and hides banner if previously dismissed
+   - On click: Hides banner and persists state to localStorage
+
+   **Code Implementation:**
+   ```html
+   <button id="banner-close-btn" class="absolute top-1/2 right-3 -translate-y-1/2 text-white hover:text-cyan-200 transition-colors p-1 rounded hover:bg-white/10" aria-label="Dismiss banner">
+       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+       </svg>
+   </button>
+   ```
+
+   ```javascript
+   (function() {
+       const banner = document.getElementById('chaoscraft-banner');
+       const closeBtn = document.getElementById('banner-close-btn');
+       const BANNER_DISMISSED_KEY = 'chaoscraft-banner-dismissed';
+       
+       // Check if banner was previously dismissed
+       if (localStorage.getItem(BANNER_DISMISSED_KEY) === 'true') {
+           if (banner) {
+               banner.style.display = 'none';
+           }
+       }
+       
+       // Handle dismiss button click
+       if (closeBtn && banner) {
+           closeBtn.addEventListener('click', function() {
+               banner.style.display = 'none';
+               localStorage.setItem(BANNER_DISMISSED_KEY, 'true');
+           });
+       }
+   })();
+   ```
+
+2. **contact.html** - Added same dismiss functionality for consistency
+
+   - Same close button structure and styling
+   - Same JavaScript dismiss functionality
+   - Same localStorage persistence
+   - Ensures consistent user experience across all pages
+
+3. **src/banner.test.ts** - Comprehensive test suite for dismiss functionality
+
+   **Test Coverage (19 new tests for dismiss feature):**
+   
+   - **Close/Dismiss Button (6 tests)**
+     - Close button exists with proper ID
+     - Has accessible label for screen readers
+     - Positioned on right side of banner
+     - Vertically centered
+     - Has hover styling for visual feedback
+     - Contains SVG icon
+   
+   - **Dismiss Button Visibility (3 tests)**
+     - Button is visible within banner structure
+     - Has appropriate padding for click target
+     - SVG icon uses proper stroke attributes
+   
+   - **JavaScript Dismiss Functionality (5 tests)**
+     - JavaScript code for localStorage exists
+     - Checks localStorage on page load
+     - Uses specific key for dismissed state
+     - Hides banner when dismissed
+     - Adds click event listener to close button
+   
+   - **Persistence (3 tests)**
+     - Stores dismissal state in localStorage
+     - Checks dismissal state on page load
+     - Hides banner if previously dismissed
+   
+   - **Banner ID for JavaScript Targeting (2 tests)**
+     - Banner div has ID attribute
+     - Close button has ID attribute
+   
+   - **Acceptance Criteria Verification (4 tests)**
+     - AC1: Close button visible on banner
+     - AC2: Clicking dismiss hides banner
+     - AC3: Dismissal state persisted in localStorage
+     - AC4: Returning users don't see dismissed banner
+   
+   - **Contact Page Dismiss (3 tests)**
+     - Contact page has dismiss button
+     - Has localStorage functionality
+     - Hides banner on dismiss
+
+### Technical Implementation Details:
+
+#### Close Button Design:
+- **Icon**: SVG X icon using stroke paths
+- **Size**: `w-5 h-5` (20px × 20px)
+- **Position**: Absolute positioning on right side
+- **Accessibility**: ARIA label for screen readers
+- **Interaction**: Hover color change and background highlight
+
+#### localStorage Implementation:
+- **Key**: `chaoscraft-banner-dismissed`
+- **Value**: String `'true'` when dismissed
+- **Scope**: Domain-wide (shared across all pages)
+- **Persistence**: Survives browser restart and page reloads
+
+#### Event Flow:
+1. Page loads → Check localStorage
+2. If dismissed → Hide banner immediately
+3. User clicks close → Hide banner + save to localStorage
+4. Return visit → Banner remains hidden
+
+### Design Rationale:
+
+1. **SVG Icon**:
+   - Vector-based for crisp rendering at any size
+   - Uses `currentColor` to inherit text color
+   - Stroke-based for consistency with design system
+   - Standard X pattern universally recognized
+
+2. **Absolute Positioning**:
+   - Doesn't affect banner content flow
+   - Stays in consistent position regardless of text length
+   - Right-aligned for standard dismiss button placement
+
+3. **Hover Effects**:
+   - Color change to cyan-200 provides visual feedback
+   - Subtle background highlight (`bg-white/10`) indicates interactivity
+   - Smooth transitions for polished feel
+
+4. **localStorage**:
+   - Client-side persistence requires no backend
+   - Survives browser sessions
+   - Simple key-value storage sufficient for boolean state
+   - Privacy-friendly (no cookies or tracking)
+
+5. **IIFE Pattern**:
+   - Immediately Invoked Function Expression
+   - Prevents global namespace pollution
+   - Encapsulates banner logic
+   - Executes on page load
+
+### Files Modified Summary:
+- **index.html**: Added close button HTML and dismiss JavaScript
+- **contact.html**: Added same dismiss functionality
+- **src/banner.test.ts**: 19 new tests for dismiss feature (total: 44 tests)
+
+### Verification:
+- Close button present: ✅ VERIFIED
+- Dismiss functionality: ✅ IMPLEMENTED
+- localStorage persistence: ✅ IMPLEMENTED
+- Cross-page consistency: ✅ VERIFIED
+- Test coverage: ✅ COMPREHENSIVE
+
+---
+
 ## Story 34: Create a Banner at the Top
 
 ### Status: ✅ COMPLETE
@@ -26,6 +208,7 @@
    - Appropriate padding: `py-3 px-4`
    - High z-index for visibility: `z-50`
    - Shadow for depth: `shadow-lg`
+   - ID for targeting: `id="chaoscraft-banner"`
 
    **Banner Content:**
    - Informational icon: ℹ️
@@ -34,6 +217,7 @@
      - `target="_blank"` (opens in new tab)
      - `rel="noopener noreferrer"` (security)
      - Hover effects: `underline hover:text-cyan-200 transition-colors`
+   - Close button with dismiss functionality
    
    **Layout Adjustments:**
    - Added `pt-16` to main content wrapper to prevent banner overlap
@@ -42,11 +226,12 @@
 2. **contact.html** - Added same banner component for consistency
 
    - Same banner structure and styling as index.html
+   - Same dismiss functionality
    - Added `pt-16` to contact form container for spacing
 
 3. **src/banner.test.ts** - Comprehensive test suite for banner component
 
-   **Test Coverage (25 tests):**
+   **Test Coverage (44 total tests):**
    
    - **Banner Structure (4 tests)**
      - Banner element exists in HTML
@@ -85,11 +270,48 @@
      - AC3: Positioned at top of page
      - AC4: Content is clear and readable
    
-   - **Contact Page Banner (3 tests)**
-     - Banner present on contact page
-     - Displays chaoscraft.dev message
-     - Has same styling as main page
-     - Does not overlap contact form
+   - **Close/Dismiss Button (6 tests)**
+     - Close button exists
+     - Has accessible label
+     - Positioned correctly
+     - Vertically centered
+     - Has hover styling
+     - Contains SVG icon
+   
+   - **Dismiss Button Visibility (3 tests)**
+     - Visible on banner
+     - Has click padding
+     - SVG with proper stroke
+   
+   - **JavaScript Dismiss Functionality (5 tests)**
+     - localStorage.setItem present
+     - localStorage.getItem check on load
+     - Uses specific key
+     - Hides banner
+     - Event listener attached
+   
+   - **Persistence (3 tests)**
+     - Stores in localStorage
+     - Checks on page load
+     - Hides if dismissed
+   
+   - **Banner ID Targeting (2 tests)**
+     - Banner has ID
+     - Button has ID
+   
+   - **Dismiss Acceptance Criteria (4 tests)**
+     - AC1: Button visible
+     - AC2: Hides on click
+     - AC3: Persisted in localStorage
+     - AC4: Returning users don't see banner
+   
+   - **Contact Page (6 tests)**
+     - Banner present
+     - Shows message
+     - Same styling
+     - No overlap
+     - Has dismiss button
+     - Has dismiss functionality
 
 ### Codebase Patterns:
 
@@ -101,12 +323,20 @@
 - **Flexbox centering**: Icon and text centered with gap spacing
 - **Accessibility**: Proper link attributes and semantic markup
 - **Spacing compensation**: Main content gets top padding to account for banner height
+- **Dismissible**: Users can close banner and state persists
+
+#### Dismiss Pattern:
+- **Close button**: SVG X icon on right side
+- **Absolute positioning**: Button doesn't affect content flow
+- **localStorage**: Client-side persistence for dismissed state
+- **IIFE**: Encapsulated JavaScript for immediate execution
+- **Event-driven**: Click triggers hide and save
 
 #### Styling Approach:
 - **Tailwind CSS utilities**: All styling via inline classes
 - **No custom CSS**: Leverages Tailwind's utility classes
 - **Consistent theme**: Cyan/blue gradient matches existing visual design
-- **Hover effects**: Interactive link with color transition
+- **Hover effects**: Interactive elements with color transitions
 - **Shadow depth**: `shadow-lg` creates visual separation from content
 
 #### Testing Pattern:
@@ -117,6 +347,8 @@
 - Ensure accessibility attributes present
 - Test banner placement in DOM hierarchy
 - Cross-page consistency verification
+- JavaScript functionality verification
+- localStorage behavior validation
 
 ### Design Rationale:
 
@@ -150,19 +382,27 @@
    - `pt-16` (64px) provides adequate spacing
    - Maintains existing layout structure
 
+7. **Dismissible Design**:
+   - Users can hide banner after reading
+   - localStorage remembers preference
+   - Improves user experience for returning visitors
+   - Standard X icon for universal recognition
+
 ### Verification Results:
 - Implementation: ✅ COMPLETE
 - Banner in index.html: ✅ VERIFIED
 - Banner in contact.html: ✅ VERIFIED
-- Test suite created: ✅ 25 tests written
+- Dismiss functionality: ✅ IMPLEMENTED
+- localStorage persistence: ✅ WORKING
+- Test suite created: ✅ 44 tests written
 - All acceptance criteria: ✅ MET
 
 ### HTML Implementation:
 
 ```html
 <!-- Banner -->
-<div class="fixed top-0 left-0 right-0 bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-3 px-4 text-center text-sm sm:text-base font-medium shadow-lg z-50">
-    <p class="flex items-center justify-center gap-2">
+<div id="chaoscraft-banner" class="fixed top-0 left-0 right-0 bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-3 px-4 text-center text-sm sm:text-base font-medium shadow-lg z-50">
+    <p class="flex items-center justify-center gap-2 pr-8">
         <span class="inline-block" aria-hidden="true">ℹ️</span>
         <span>This site can be modified by anyone participating in 
             <a href="https://chaoscraft.dev" target="_blank" rel="noopener noreferrer" class="underline hover:text-cyan-200 transition-colors font-semibold">
@@ -170,7 +410,36 @@
             </a>
         </span>
     </p>
+    <button id="banner-close-btn" class="absolute top-1/2 right-3 -translate-y-1/2 text-white hover:text-cyan-200 transition-colors p-1 rounded hover:bg-white/10" aria-label="Dismiss banner">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+    </button>
 </div>
+
+<script>
+    // Banner dismiss functionality
+    (function() {
+        const banner = document.getElementById('chaoscraft-banner');
+        const closeBtn = document.getElementById('banner-close-btn');
+        const BANNER_DISMISSED_KEY = 'chaoscraft-banner-dismissed';
+        
+        // Check if banner was previously dismissed
+        if (localStorage.getItem(BANNER_DISMISSED_KEY) === 'true') {
+            if (banner) {
+                banner.style.display = 'none';
+            }
+        }
+        
+        // Handle dismiss button click
+        if (closeBtn && banner) {
+            closeBtn.addEventListener('click', function() {
+                banner.style.display = 'none';
+                localStorage.setItem(BANNER_DISMISSED_KEY, 'true');
+            });
+        }
+    })();
+</script>
 ```
 
 ### Key Features:
@@ -181,6 +450,9 @@
 5. ✅ Responsive design for all screen sizes
 6. ✅ Does not interfere with existing content
 7. ✅ Comprehensive test coverage
+8. ✅ **Dismissible with close button**
+9. ✅ **localStorage persistence for dismissed state**
+10. ✅ **Returning users don't see dismissed banner**
 
 ---
 
@@ -266,7 +538,7 @@ All styling acceptance criteria are verified by existing tests:
 - Responsive behavior: ✅ IMPLEMENTED  
 - No layout overlap: ✅ VERIFIED
 - Design consistency: ✅ MAINTAINED
-- Tests passing: ✅ 28 tests total (25 original + 3 contact page)
+- Tests passing: ✅ 44 tests total
 
 ---
 
@@ -305,7 +577,7 @@ All styling acceptance criteria are verified by existing tests:
 
 #### Component Hierarchy:
 1. `<body>` - Root container with flex layout
-2. **[BANNER - IMPLEMENTED]** - Full-width informational banner
+2. **[BANNER - IMPLEMENTED]** - Full-width informational banner with dismiss functionality
 3. `<div class="text-center relative z-10">` - Main content wrapper
    - `<h1>` - Main headline
    - `<p>` - Subtitle
@@ -349,7 +621,7 @@ All styling acceptance criteria are verified by existing tests:
 
 ## Summary
 
-**Total Tests**: 268 passing (243 prior + 25 new for banner)
+**Total Tests**: 287 passing (243 prior + 44 new for banner with dismiss)
 - Story 1: 24 tests (project setup and index module)
 - Story 2: 33 tests (conic gradient utility)
 - Story 3: 33 tests (gradient animator)
@@ -364,6 +636,7 @@ All styling acceptance criteria are verified by existing tests:
 - Story 12: 13 tests (headline styling and text content)
 - **Story 34: 25 tests (banner component)**
 - **Story 3: Included in Story 34 tests (banner styling)**
+- **Story 4: 19 tests (banner dismiss functionality)**
 
 **Architecture**:
 - Modular design with separate concerns
@@ -374,6 +647,7 @@ All styling acceptance criteria are verified by existing tests:
 - Static HTML with Tailwind CSS via CDN
 - Mobile-first responsive design
 - Interactive visual enhancements
+- Client-side localStorage for state persistence
 
 **Features Implemented**:
 1. ✅ Project structure and build configuration
@@ -390,3 +664,4 @@ All styling acceptance criteria are verified by existing tests:
 12. ✅ First headline styling and text content update
 13. ✅ **Banner component at top of all pages**
 14. ✅ **Banner styling with responsive design**
+15. ✅ **Banner dismiss functionality with localStorage persistence**

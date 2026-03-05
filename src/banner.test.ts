@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -147,6 +147,121 @@ describe('Story 34: Create Banner Component', () => {
   });
 });
 
+describe('Story 4: Banner Dismiss Functionality', () => {
+  const htmlPath = join(process.cwd(), 'index.html');
+  const htmlContent = readFileSync(htmlPath, 'utf-8');
+
+  describe('Close/Dismiss Button', () => {
+    it('should have a close button on the banner', () => {
+      expect(htmlContent).toMatch(/<button[^>]*id="banner-close-btn"/);
+    });
+
+    it('should have an accessible label for the close button', () => {
+      expect(htmlContent).toMatch(/aria-label="Dismiss banner"/);
+    });
+
+    it('should be positioned on the right side of the banner', () => {
+      expect(htmlContent).toMatch(/absolute top-1\/2 right-3/);
+    });
+
+    it('should be vertically centered', () => {
+      expect(htmlContent).toMatch(/-translate-y-1\/2/);
+    });
+
+    it('should have hover styling for visual feedback', () => {
+      expect(htmlContent).toMatch(/hover:text-cyan-200/);
+    });
+
+    it('should have an SVG icon for the close button', () => {
+      expect(htmlContent).toMatch(/<svg[^>]*class="[^"]*w-5 h-5[^"]*"/);
+    });
+  });
+
+  describe('Dismiss Button Visibility', () => {
+    it('should be visible on the banner', () => {
+      const bannerMatch = htmlContent.match(/<div[^>]*id="chaoscraft-banner"[^>]*>(.*?)<\/div>\s*<\/div>/s);
+      expect(bannerMatch).not.toBeNull();
+      expect(bannerMatch![1]).toContain('banner-close-btn');
+    });
+
+    it('should have appropriate padding for click target', () => {
+      expect(htmlContent).toMatch(/p-1 rounded/);
+    });
+
+    it('should use SVG icon with proper stroke', () => {
+      expect(htmlContent).toMatch(/stroke="currentColor"/);
+      expect(htmlContent).toMatch(/stroke-linecap="round"/);
+    });
+  });
+
+  describe('JavaScript Dismiss Functionality', () => {
+    it('should have JavaScript code for banner dismiss', () => {
+      expect(htmlContent).toMatch(/localStorage\.setItem/);
+    });
+
+    it('should check localStorage on page load', () => {
+      expect(htmlContent).toMatch(/localStorage\.getItem/);
+    });
+
+    it('should use a specific key for banner dismissed state', () => {
+      expect(htmlContent).toContain('chaoscraft-banner-dismissed');
+    });
+
+    it('should hide banner when dismissed', () => {
+      expect(htmlContent).toMatch(/banner\.style\.display = 'none'/);
+    });
+
+    it('should add click event listener to close button', () => {
+      expect(htmlContent).toMatch(/closeBtn\.addEventListener\('click'/);
+    });
+  });
+
+  describe('Persistence', () => {
+    it('should store dismissal state in localStorage', () => {
+      expect(htmlContent).toMatch(/localStorage\.setItem\(['"]chaoscraft-banner-dismissed['"], ['"]true['"]\)/);
+    });
+
+    it('should check dismissal state on page load', () => {
+      expect(htmlContent).toMatch(/localStorage\.getItem\(['"]chaoscraft-banner-dismissed['"]\)/);
+    });
+
+    it('should hide banner if previously dismissed', () => {
+      expect(htmlContent).toMatch(/if \(localStorage\.getItem\(BANNER_DISMISSED_KEY\) === 'true'\)/);
+    });
+  });
+
+  describe('Banner ID for JavaScript Targeting', () => {
+    it('should have id attribute on banner div', () => {
+      expect(htmlContent).toContain('id="chaoscraft-banner"');
+    });
+
+    it('should have id attribute on close button', () => {
+      expect(htmlContent).toContain('id="banner-close-btn"');
+    });
+  });
+
+  describe('Acceptance Criteria Verification - Dismiss', () => {
+    it('AC1: Close/dismiss button is visible on the banner', () => {
+      expect(htmlContent).toMatch(/<button[^>]*id="banner-close-btn"/);
+      expect(htmlContent).toMatch(/absolute top-1\/2 right-3/);
+    });
+
+    it('AC2: Clicking dismiss hides the banner', () => {
+      expect(htmlContent).toMatch(/banner\.style\.display = 'none'/);
+    });
+
+    it('AC3: Dismissal state is persisted (localStorage)', () => {
+      expect(htmlContent).toMatch(/localStorage\.setItem/);
+      expect(htmlContent).toContain('chaoscraft-banner-dismissed');
+    });
+
+    it('AC4: Returning users with dismissed state do not see the banner', () => {
+      expect(htmlContent).toMatch(/if \(localStorage\.getItem\(BANNER_DISMISSED_KEY\) === 'true'\)/);
+      expect(htmlContent).toMatch(/banner\.style\.display = 'none'/);
+    });
+  });
+});
+
 describe('Banner on Contact Page', () => {
   const htmlPath = join(process.cwd(), 'contact.html');
   const htmlContent = readFileSync(htmlPath, 'utf-8');
@@ -174,6 +289,20 @@ describe('Banner on Contact Page', () => {
       
       // Contact form should have padding to account for banner
       expect(htmlContent).toMatch(/pt-\d+/);
+    });
+  });
+
+  describe('Dismiss Functionality on Contact Page', () => {
+    it('should have dismiss button on contact page banner', () => {
+      expect(htmlContent).toMatch(/<button[^>]*id="banner-close-btn"/);
+    });
+
+    it('should have localStorage functionality on contact page', () => {
+      expect(htmlContent).toContain('chaoscraft-banner-dismissed');
+    });
+
+    it('should hide banner on dismiss on contact page', () => {
+      expect(htmlContent).toMatch(/banner\.style\.display = 'none'/);
     });
   });
 });

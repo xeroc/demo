@@ -60,8 +60,8 @@
 </head>
 <body>
     <!-- Banner -->
-    <div class="fixed top-0 left-0 right-0 bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-3 px-4 text-center text-sm sm:text-base font-medium shadow-lg z-50">
-        <p class="flex items-center justify-center gap-2">
+    <div id="chaoscraft-banner" class="fixed top-0 left-0 right-0 bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-3 px-4 text-center text-sm sm:text-base font-medium shadow-lg z-50">
+        <p class="flex items-center justify-center gap-2 pr-8">
             <span class="inline-block" aria-hidden="true">ℹ️</span>
             <span>This site can be modified by anyone participating in 
                 <a href="https://chaoscraft.dev" target="_blank" rel="noopener noreferrer" class="underline hover:text-cyan-200 transition-colors font-semibold">
@@ -69,6 +69,11 @@
                 </a>
             </span>
         </p>
+        <button id="banner-close-btn" class="absolute top-1/2 right-3 -translate-y-1/2 text-white hover:text-cyan-200 transition-colors p-1 rounded hover:bg-white/10" aria-label="Dismiss banner">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
     </div>
     
     <div class="contact-form pt-16">
@@ -117,6 +122,30 @@
             <button type="submit">Send Message</button>
         </form>
     </div>
+    
+    <script>
+        // Banner dismiss functionality
+        (function() {
+            const banner = document.getElementById('chaoscraft-banner');
+            const closeBtn = document.getElementById('banner-close-btn');
+            const BANNER_DISMISSED_KEY = 'chaoscraft-banner-dismissed';
+            
+            // Check if banner was previously dismissed
+            if (localStorage.getItem(BANNER_DISMISSED_KEY) === 'true') {
+                if (banner) {
+                    banner.style.display = 'none';
+                }
+            }
+            
+            // Handle dismiss button click
+            if (closeBtn && banner) {
+                closeBtn.addEventListener('click', function() {
+                    banner.style.display = 'none';
+                    localStorage.setItem(BANNER_DISMISSED_KEY, 'true');
+                });
+            }
+        })();
+    </script>
     
     <script>
         // Client-side form validation
