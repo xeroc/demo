@@ -47,4 +47,4 @@ jobs:
           user_name: "github-actions[bot]"
           user_email: "github-actions[bot]@users.noreply.github.com"
           commit_message: "Deploy from ${{ github.repository }}@${{ github.sha }}"
-          cname: app.chaoscraft.chainsquad.com
+          cname: chaoscraft.dev
