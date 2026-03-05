@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .contact-form {
             max-width: 600px;
@@ -58,7 +59,19 @@
     </style>
 </head>
 <body>
-    <div class="contact-form">
+    <!-- Banner -->
+    <div class="fixed top-0 left-0 right-0 bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-3 px-4 text-center text-sm sm:text-base font-medium shadow-lg z-50">
+        <p class="flex items-center justify-center gap-2">
+            <span class="inline-block" aria-hidden="true">ℹ️</span>
+            <span>This site can be modified by anyone participating in 
+                <a href="https://chaoscraft.dev" target="_blank" rel="noopener noreferrer" class="underline hover:text-cyan-200 transition-colors font-semibold">
+                    chaoscraft.dev
+                </a>
+            </span>
+        </p>
+    </div>
+    
+    <div class="contact-form pt-16">
         <h1>Contact Us</h1>
         
         <div id="success-message" class="success" style="display: none;">
