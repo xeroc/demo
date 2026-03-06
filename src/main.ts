@@ -6,6 +6,7 @@ import { initAnimatedBackground, DEFAULT_CONFIG } from './index';
 import { mountDancingRobot } from './robotSvg';
 import { mountBanner } from './bannerComponent';
 import { mountHeader } from './headerComponent';
+import { mountFooter } from './footerComponent';
 
 // Initialize when DOM is ready
 if (typeof document !== 'undefined') {
@@ -18,6 +19,8 @@ if (typeof document !== 'undefined') {
     initAnimatedBackground(DEFAULT_CONFIG);
     // Mount dancing robot
     mountDancingRobot('robot-container');
+    // Mount footer at the bottom of the page
+    mountFooter();
   });
 }
 
@@ -28,3 +31,5 @@ export { createBanner, mountBanner, unmountBanner, getBanner } from './bannerCom
 export type { BannerConfig } from './bannerComponent';
 export { createHeader, mountHeader, unmountHeader, getHeader, setActiveNavItem } from './headerComponent';
 export type { HeaderConfig, NavItem } from './headerComponent';
+export { createFooter, mountFooter, unmountFooter, getFooter } from './footerComponent';
+export type { FooterConfig, FooterLink } from './footerComponent';
