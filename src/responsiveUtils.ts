@@ -183,12 +183,7 @@ export function injectResponsiveUtilities(): void {
  * Checks if an element is visible at current viewport width
  */
 export function isVisibleAtBreakpoint(element: HTMLElement, breakpoint: 'mobile' | 'tablet' | 'desktop'): boolean {
-  const width = window.innerWidth;
   const classes = element.className.split(' ');
-  
-  const isMobile = width < 640;
-  const isTablet = width >= 640 && width < 1024;
-  const isDesktop = width >= 1024;
   
   // Check hide classes
   if (breakpoint === 'mobile' && classes.includes('hide-mobile')) return false;
