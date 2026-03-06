@@ -14,15 +14,20 @@ if (typeof document !== 'undefined') {
   document.addEventListener('DOMContentLoaded', () => {
     // Inject responsive utility styles
     injectResponsiveUtilities();
-    // Mount banner at the top of the page
-    mountBanner();
-    // Mount navbar after banner (header image and name only)
+    
+    // Mount navbar first (header image and name only)
     mountNavbar();
+    
+    // Mount banner after navbar (explains what's going on with link to app)
+    mountBanner();
+    
     // Initialize animated background
     initAnimatedBackground(DEFAULT_CONFIG);
+    
     // Mount dancing robot
     mountDancingRobot('robot-container');
-    // Mount footer at the bottom of the page (copyright only, no links)
+    
+    // Mount footer at the bottom (copyright only, no links)
     mountFooter();
   });
 }

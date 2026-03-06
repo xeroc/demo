@@ -65,6 +65,48 @@ else
 fi
 
 echo ""
+echo "Checking banner component TypeScript syntax..."
+
+# Basic checks for the banner component
+if grep -q "export function createBanner" src/bannerComponent.ts; then
+    echo "✓ createBanner function exported"
+else
+    echo "✗ createBanner function missing"
+    exit 1
+fi
+
+if grep -q "export function mountBanner" src/bannerComponent.ts; then
+    echo "✓ mountBanner function exported"
+else
+    echo "✗ mountBanner function missing"
+    exit 1
+fi
+
+# Check banner has participation message
+if grep -q "chaoscraft.dev" src/bannerComponent.ts; then
+    echo "✓ Banner participation message present"
+else
+    echo "✗ Banner participation message missing"
+    exit 1
+fi
+
+# Check banner has link to app
+if grep -q "app.chaoscraft.dev" src/bannerComponent.ts; then
+    echo "✓ Banner link to app present"
+else
+    echo "✗ Banner link to app missing"
+    exit 1
+fi
+
+# Check banner is responsive
+if grep -q "w-full" src/bannerComponent.ts && grep -q "max-w-full" src/bannerComponent.ts; then
+    echo "✓ Banner responsive width classes present"
+else
+    echo "✗ Banner responsive width classes missing"
+    exit 1
+fi
+
+echo ""
 echo "Checking footer component TypeScript syntax..."
 
 # Basic checks for the footer component
@@ -191,11 +233,38 @@ else
     exit 1
 fi
 
-# Check main.ts integrates navbar instead of header
-if grep -q "mountNavbar" src/main.ts && ! grep -q "mountHeader" src/main.ts; then
-    echo "✓ Navbar integrated in main.ts (header removed)"
+echo ""
+echo "Checking main.ts integration..."
+
+# Check main.ts integrates navbar (not header)
+if grep -q "mountNavbar" src/main.ts; then
+    echo "✓ Navbar integrated in main.ts"
 else
-    echo "✗ Navbar not properly integrated in main.ts"
+    echo "✗ Navbar not integrated in main.ts"
+    exit 1
+fi
+
+# Check main.ts does not use mountHeader
+if ! grep -q "mountHeader" src/main.ts; then
+    echo "✓ Header not used in main.ts (navbar used instead)"
+else
+    echo "✗ Header should not be used in main.ts"
+    exit 1
+fi
+
+# Check main.ts integrates banner
+if grep -q "mountBanner" src/main.ts; then
+    echo "✓ Banner integrated in main.ts"
+else
+    echo "✗ Banner not integrated in main.ts"
+    exit 1
+fi
+
+# Check main.ts integrates footer
+if grep -q "mountFooter" src/main.ts; then
+    echo "✓ Footer integrated in main.ts"
+else
+    echo "✗ Footer not integrated in main.ts"
     exit 1
 fi
 
@@ -204,6 +273,66 @@ if grep -q "injectResponsiveUtilities" src/main.ts; then
     echo "✓ Responsive utilities integrated in main.ts"
 else
     echo "✗ Responsive utilities not integrated in main.ts"
+    exit 1
+fi
+
+echo ""
+echo "Checking mounting order in main.ts..."
+
+# Check mounting order: navbar -> banner -> background -> robot -> footer
+if grep -A 20 "DOMContentLoaded" src/main.ts | grep -q "mountNavbar"; then
+    echo "✓ mountNavbar called in DOMContentLoaded"
+else
+    echo "✗ mountNavbar not called in DOMContentLoaded"
+    exit 1
+fi
+
+if grep -A 20 "DOMContentLoaded" src/main.ts | grep -q "mountBanner"; then
+    echo "✓ mountBanner called in DOMContentLoaded"
+else
+    echo "✗ mountBanner not called in DOMContentLoaded"
+    exit 1
+fi
+
+if grep -A 20 "DOMContentLoaded" src/main.ts | grep -q "mountFooter"; then
+    echo "✓ mountFooter called in DOMContentLoaded"
+else
+    echo "✗ mountFooter not called in DOMContentLoaded"
+    exit 1
+fi
+
+echo ""
+echo "Checking index.html structure..."
+
+# Check index.html has main content container
+if grep -q "<main" index.html; then
+    echo "✓ Main content container present in index.html"
+else
+    echo "✗ Main content container missing in index.html"
+    exit 1
+fi
+
+# Check index.html has robot container
+if grep -q 'id="robot-container"' index.html; then
+    echo "✓ Robot container present in index.html"
+else
+    echo "✗ Robot container missing in index.html"
+    exit 1
+fi
+
+# Check index.html has overflow-x hidden
+if grep -q "overflow-x: hidden" index.html || grep -q "overflow-x-hidden" index.html; then
+    echo "✓ Overflow-x hidden in index.html"
+else
+    echo "✗ Overflow-x hidden missing in index.html"
+    exit 1
+fi
+
+# Check index.html has max-width constraints
+if grep -q "max-w-" index.html || grep -q "max-width:" index.html; then
+    echo "✓ Max-width constraints present in index.html"
+else
+    echo "✗ Max-width constraints missing in index.html"
     exit 1
 fi
 
