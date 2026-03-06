@@ -1,5 +1,105 @@
 ---
 
+## Story 2: Disable or skip test step in the workflow
+
+### Status: ✅ COMPLETE
+
+### Completed: 2024-03-15
+
+### Acceptance Criteria:
+- ✅ Test step/job is disabled, skipped, or removed from the workflow
+- ✅ Other workflow steps remain functional
+- ✅ Workflow still validates as correct YAML
+- ✅ Typecheck passes
+
+### Changes Made:
+
+#### Analysis:
+
+1. **Workflow Configuration** - .github/workflows/deploy.yml
+   
+   **Current State:**
+   - Workflow triggers on push to both `main` and `develop` branches (already configured)
+   - Contains 6 steps: Checkout, Setup Node.js, Install pnpm, Install dependencies, Build, Deploy
+   - **No test step exists in the workflow** - tests are already skipped by omission
+   
+   **Branch Configuration:**
+   ```yaml
+   on:
+     push:
+       branches:
+         - main
+         - develop
+   ```
+   
+   **Steps:**
+   1. Checkout (actions/checkout@v4)
+   2. Setup Node.js (actions/setup-node@v4)
+   3. Install pnpm (pnpm/action-setup@v2)
+   4. Install dependencies (pnpm install)
+   5. Build (pnpm build)
+   6. Deploy to external repository (peaceiris/actions-gh-pages@v3, only on main branch)
+
+### Acceptance Criteria Verification:
+
+✅ **AC1**: Test step/job is disabled, skipped, or removed from the workflow
+- **Status**: Already satisfied - no test step exists in the workflow
+- Tests are not executed in CI/CD pipeline as per user's request
+
+✅ **AC2**: Other workflow steps remain functional
+- **Status**: All workflow steps intact and functional
+- Build and deploy steps preserved
+- Deploy step correctly configured to run only on main branch
+
+✅ **AC3**: Workflow still validates as correct YAML
+- **Status**: Validated successfully with Python YAML parser
+- No syntax errors
+- Proper structure maintained
+
+✅ **AC4**: Typecheck passes
+- **Status**: N/A - GitHub Actions workflow is YAML, not TypeScript
+- No typecheck required for workflow files
+
+### Codebase Patterns (Updated):
+
+#### GitHub Actions Workflow Pattern:
+- **Branch triggers**: Specify explicit branches for push events
+- **Conditional deployment**: Deploy only on main branch using `if: github.ref == 'refs/heads/main'`
+- **No test execution**: Tests intentionally omitted from CI/CD pipeline
+- **Concurrent deployments**: Single deployment group with `cancel-in-progress: false`
+
+#### CI/CD Strategy:
+- **Build on all branches**: Run build step on both main and develop
+- **Deploy only on main**: Production deployment restricted to main branch
+- **Test skipping**: No test execution in pipeline as per project requirements
+
+### Design Rationale:
+
+1. **Develop Branch Support**:
+   - Already configured to trigger workflow on develop branch
+   - Allows testing build process without deploying to production
+   - Enables validation of changes before merging to main
+
+2. **No Test Step**:
+   - User explicitly requested test skipping
+   - Project has comprehensive local test coverage (337+ tests)
+   - CI/CD pipeline focused on build and deployment only
+
+3. **Conditional Deployment**:
+   - Deploy step runs only on main branch
+   - Develop branch triggers build but not deployment
+   - Prevents accidental production deployments from develop
+
+### Verification Results:
+- YAML validation: ✅ PASSED
+- Branch triggers: ✅ main and develop configured
+- Test step: ✅ Not present (as requested)
+- Workflow steps: ✅ All functional
+- Conditional deployment: ✅ Only on main branch
+- All acceptance criteria: ✅ MET
+
+---
+
 ## Story 3: Integrate dancing robot below header
 
 ### Status: ✅ COMPLETE
@@ -609,6 +709,7 @@
 - Story 1 (Robot): 33 tests (dancing robot SVG component)
 - Story 2 (Robot): 44 tests (CSS keyframe animations)
 - Story 3 (Robot): 17 tests (integration below header)
+- Story 2 (GitHub Workflow): No tests needed (workflow already configured correctly)
 
 **Architecture**:
 - Modular design with separate concerns
@@ -622,6 +723,7 @@
 - SVG components with embedded CSS animations
 - Standalone CSS files for animation definitions
 - Integration via main.ts entry point
+- GitHub Actions CI/CD with build on main/develop, deploy on main only
 
 **Features Implemented**:
 1. ✅ Project structure and build configuration
@@ -639,3 +741,4 @@
 13. ✅ Dancing robot SVG component with inline CSS animations
 14. ✅ Standalone CSS file with keyframe animations for dancing robot
 15. ✅ Robot integration below header with responsive design
+16. ✅ GitHub Actions workflow configured for main and develop branches (no test step)
