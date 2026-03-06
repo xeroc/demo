@@ -125,7 +125,9 @@
   animation: robot-eye-glow 1s ease-in-out infinite;
 }
 
-/* Dancing robot container class */
+/* Dancing robot container class - RESPONSIVE */
 .dancing-robot {
   display: inline-block;
+  max-width: 100%;
+  height: auto;
 }
