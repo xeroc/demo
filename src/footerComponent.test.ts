@@ -1,14 +1,20 @@
 /**
- * Tests for Footer Component - Responsive Design
- * Story 6: Make footer responsive
+ * Tests for Footer Component
+ * Story 2: Updated footer with copyright only, no links
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { createFooter, mountFooter, unmountFooter, getFooter, DEFAULT_FOOTER_CONFIG } from './footerComponent';
-import type { FooterConfig, FooterLink } from './footerComponent';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import {
+  createFooter,
+  mountFooter,
+  unmountFooter,
+  getFooter,
+  DEFAULT_FOOTER_CONFIG
+} from './footerComponent';
 
-describe('Footer Component - Responsive Design', () => {
+describe('Footer Component - Story 2 Updated', () => {
   beforeEach(() => {
+    unmountFooter();
     document.body.innerHTML = '';
   });
 
@@ -16,462 +22,327 @@ describe('Footer Component - Responsive Design', () => {
     unmountFooter();
   });
 
-  describe('AC1: Footer displays correctly on mobile (320px-767px)', () => {
-    it('should have responsive padding on mobile', () => {
-      const footer = createFooter();
-      const container = footer.querySelector('div');
-      
-      expect(container?.className).toMatch(/py-6/); // Base vertical padding for mobile
-      expect(container?.className).toMatch(/px-4/); // Base horizontal padding for mobile
-    });
-
-    it('should stack navigation links vertically on mobile', () => {
-      const footer = createFooter();
-      const nav = footer.querySelector('nav');
-      
-      expect(nav?.className).toMatch(/flex-col/); // Column layout for mobile
-      expect(nav?.className).toMatch(/sm:flex-row/); // Row layout on larger screens
-    });
-
-    it('should have appropriate gap between stacked links on mobile', () => {
-      const footer = createFooter();
-      const nav = footer.querySelector('nav');
-      
-      expect(nav?.className).toMatch(/gap-3/); // Gap for mobile
-    });
-
-    it('should have readable text size on mobile', () => {
-      const footer = createFooter();
-      const links = footer.querySelectorAll('nav a');
-      
-      links.forEach(link => {
-        expect(link.className).toMatch(/text-sm/); // 14px minimum for mobile
-      });
-    });
-
-    it('should have compact copyright text on mobile', () => {
+  describe('Copyright text', () => {
+    it('should have copyright with year 2026', () => {
       const footer = createFooter();
       const copyright = footer.querySelector('p');
-      
-      expect(copyright?.className).toMatch(/text-xs/); // Smaller text on mobile
+      expect(copyright?.textContent).toContain('2026');
     });
 
-    it('should center all content on mobile', () => {
-      const footer = createFooter();
-      const contentWrapper = footer.querySelector('div > div');
-      
-      expect(contentWrapper?.className).toMatch(/flex-col/); // Vertical stack
-      expect(contentWrapper?.className).toMatch(/items-center/); // Centered
-    });
-
-    it('should have appropriate spacing between sections on mobile', () => {
-      const footer = createFooter();
-      const contentWrapper = footer.querySelector('div > div');
-      
-      expect(contentWrapper?.className).toMatch(/gap-4/); // Gap for mobile
-    });
-
-    it('should have full-width divider on mobile', () => {
-      const footer = createFooter();
-      const divider = footer.querySelector('.h-px');
-      
-      expect(divider?.className).toMatch(/w-full/); // Full width on mobile
-      expect(divider?.className).toMatch(/max-w-md/); // Constrained width
-    });
-  });
-
-  describe('AC2: Footer displays correctly on tablet (768px-1023px)', () => {
-    it('should show horizontal navigation on tablet', () => {
-      const footer = createFooter();
-      const nav = footer.querySelector('nav');
-      
-      expect(nav?.className).toMatch(/sm:flex-row/); // Row layout at sm breakpoint
-    });
-
-    it('should have increased padding on tablet', () => {
-      const footer = createFooter();
-      const container = footer.querySelector('div');
-      
-      expect(container?.className).toMatch(/sm:px-6/); // More padding on tablet
-      expect(container?.className).toMatch(/sm:py-8/); // More vertical padding
-    });
-
-    it('should have larger text size on tablet', () => {
-      const footer = createFooter();
-      const links = footer.querySelectorAll('nav a');
-      
-      links.forEach(link => {
-        expect(link.className).toMatch(/sm:text-base/); // 16px on tablet
-      });
-    });
-
-    it('should have larger copyright text on tablet', () => {
+    it('should have correct copyright text', () => {
       const footer = createFooter();
       const copyright = footer.querySelector('p');
-      
-      expect(copyright?.className).toMatch(/sm:text-sm/); // 14px on tablet
+      expect(copyright?.textContent).toBe('© 2026 ChaosCraft. Built by chaos, one dollar at a time.');
     });
 
-    it('should have increased gap on tablet', () => {
-      const footer = createFooter();
-      const nav = footer.querySelector('nav');
-      const contentWrapper = footer.querySelector('div > div');
-      
-      expect(nav?.className).toMatch(/sm:gap-6/); // More gap between links
-      expect(contentWrapper?.className).toMatch(/sm:gap-6/); // More gap between sections
+    it('should use default config', () => {
+      expect(DEFAULT_FOOTER_CONFIG.copyrightText).toBe('© 2026 ChaosCraft. Built by chaos, one dollar at a time.');
     });
 
-    it('should have appropriately sized emoji on tablet', () => {
-      const footer = createFooter();
-      const emoji = footer.querySelector('span[aria-hidden="true"]');
-      
-      expect(emoji?.className).toMatch(/sm:text-3xl/); // Larger on tablet
+    it('should accept custom copyright text', () => {
+      const footer = createFooter({ copyrightText: 'Custom copyright' });
+      const copyright = footer.querySelector('p');
+      expect(copyright?.textContent).toBe('Custom copyright');
     });
   });
 
-  describe('AC3: Footer displays correctly on desktop (1024px+)', () => {
-    it('should have desktop padding', () => {
+  describe('No navigation links', () => {
+    it('should not have any navigation links', () => {
       const footer = createFooter();
-      const container = footer.querySelector('div');
-      
-      expect(container?.className).toMatch(/lg:px-8/); // Desktop horizontal padding
+      const links = footer.querySelectorAll('a');
+      expect(links.length).toBe(0);
     });
 
-    it('should have desktop vertical padding', () => {
-      const footer = createFooter();
-      const container = footer.querySelector('div');
-      
-      expect(container?.className).toMatch(/md:py-10/); // More vertical padding on desktop
-    });
-
-    it('should have max-width constraint on desktop', () => {
-      const footer = createFooter();
-      const container = footer.querySelector('div');
-      
-      expect(container?.className).toMatch(/max-w-7xl/); // Constrained width
-    });
-
-    it('should have horizontal navigation links on desktop', () => {
+    it('should not have nav element', () => {
       const footer = createFooter();
       const nav = footer.querySelector('nav');
-      
-      expect(nav?.className).toMatch(/flex-row/); // Horizontal layout
+      expect(nav).toBeNull();
     });
 
-    it('should have larger gap between links on desktop', () => {
+    it('should not have any buttons', () => {
       const footer = createFooter();
-      const nav = footer.querySelector('nav');
-      
-      expect(nav?.className).toMatch(/md:gap-8/); // More spacing on desktop
+      const buttons = footer.querySelectorAll('button');
+      expect(buttons.length).toBe(0);
     });
 
-    it('should have larger gap between sections on desktop', () => {
+    it('should have only one paragraph element', () => {
       const footer = createFooter();
-      const contentWrapper = footer.querySelector('div > div');
-      
-      expect(contentWrapper?.className).toMatch(/md:gap-8/); // More spacing on desktop
+      const paragraphs = footer.querySelectorAll('p');
+      expect(paragraphs.length).toBe(1);
+    });
+
+    it('should have only copyright as content', () => {
+      const footer = createFooter();
+      const contentWrapper = footer.querySelector('.flex.flex-col');
+      expect(contentWrapper?.children.length).toBe(1);
+      expect(contentWrapper?.children[0].tagName).toBe('P');
     });
   });
 
-  describe('AC4: Footer content remains readable and accessible at all sizes', () => {
-    it('should have proper contrast for text', () => {
+  describe('Responsive design', () => {
+    it('should have responsive padding on mobile (px-4)', () => {
       const footer = createFooter();
-      const links = footer.querySelectorAll('nav a');
-      
-      links.forEach(link => {
-        expect(link.className).toMatch(/text-gray-300/); // Light text for contrast
-      });
+      const container = footer.querySelector('.max-w-7xl');
+      expect(container?.className).toContain('px-4');
     });
 
-    it('should have hover states for links', () => {
+    it('should have responsive padding at sm breakpoint (sm:px-6)', () => {
       const footer = createFooter();
-      const links = footer.querySelectorAll('nav a');
-      
-      links.forEach(link => {
-        expect(link.className).toMatch(/hover:text-white/);
-        expect(link.className).toMatch(/hover:text-cyan-300/);
-      });
+      const container = footer.querySelector('.max-w-7xl');
+      expect(container?.className).toContain('sm:px-6');
     });
 
-    it('should have transition animations for smooth interactions', () => {
+    it('should have responsive padding at lg breakpoint (lg:px-8)', () => {
       const footer = createFooter();
-      const links = footer.querySelectorAll('nav a');
-      
-      links.forEach(link => {
-        expect(link.className).toMatch(/transition-colors/);
-        expect(link.className).toMatch(/duration-200/);
-      });
+      const container = footer.querySelector('.max-w-7xl');
+      expect(container?.className).toContain('lg:px-8');
     });
 
-    it('should have aria-label for external links', () => {
-      const config: Partial<FooterConfig> = {
-        links: [
-          { label: 'External', href: 'https://example.com', external: true }
-        ]
-      };
-      const footer = createFooter(config);
-      const externalLink = footer.querySelector('a[target="_blank"]');
-      
-      expect(externalLink?.getAttribute('aria-label')).toContain('opens in a new tab');
+    it('should have responsive vertical padding (py-6 sm:py-8 md:py-10)', () => {
+      const footer = createFooter();
+      const container = footer.querySelector('.max-w-7xl');
+      expect(container?.className).toContain('py-6');
+      expect(container?.className).toContain('sm:py-8');
+      expect(container?.className).toContain('md:py-10');
     });
 
-    it('should have proper role attribute', () => {
+    it('should have max-width constraint (max-w-7xl)', () => {
       const footer = createFooter();
+      const container = footer.querySelector('.max-w-7xl');
+      expect(container).not.toBeNull();
+    });
+
+    it('should be horizontally centered (mx-auto)', () => {
+      const footer = createFooter();
+      const container = footer.querySelector('.mx-auto');
+      expect(container).not.toBeNull();
+    });
+
+    it('should have responsive copyright text size', () => {
+      const footer = createFooter();
+      const copyright = footer.querySelector('p');
+      expect(copyright?.className).toContain('text-xs');
+      expect(copyright?.className).toContain('sm:text-sm');
+      expect(copyright?.className).toContain('md:text-base');
+    });
+
+    it('should have centered copyright text', () => {
+      const footer = createFooter();
+      const copyright = footer.querySelector('p');
+      expect(copyright?.className).toContain('text-center');
+    });
+
+    it('should not overflow horizontally on mobile', () => {
+      const footer = createFooter();
+      document.body.appendChild(footer);
       
+      const rect = footer.getBoundingClientRect();
+      expect(rect.width).toBeLessThanOrEqual(window.innerWidth);
+    });
+  });
+
+  describe('Visual styling', () => {
+    it('should have semi-transparent background (bg-slate-900/95)', () => {
+      const footer = createFooter();
+      expect(footer.className).toContain('bg-slate-900/95');
+    });
+
+    it('should have backdrop blur (backdrop-blur-md)', () => {
+      const footer = createFooter();
+      expect(footer.className).toContain('backdrop-blur-md');
+    });
+
+    it('should have border separator (border-t border-white/10)', () => {
+      const footer = createFooter();
+      expect(footer.className).toContain('border-t');
+      expect(footer.className).toContain('border-white/10');
+    });
+
+    it('should have mt-auto for spacing', () => {
+      const footer = createFooter();
+      expect(footer.className).toContain('mt-auto');
+    });
+
+    it('should have gray text color (text-gray-400)', () => {
+      const footer = createFooter();
+      const copyright = footer.querySelector('p');
+      expect(copyright?.className).toContain('text-gray-400');
+    });
+
+    it('should use flexbox for layout', () => {
+      const footer = createFooter();
+      const contentWrapper = footer.querySelector('.flex');
+      expect(contentWrapper).not.toBeNull();
+    });
+
+    it('should center content vertically', () => {
+      const footer = createFooter();
+      const contentWrapper = footer.querySelector('.flex-col');
+      expect(contentWrapper).not.toBeNull();
+    });
+
+    it('should center content horizontally', () => {
+      const footer = createFooter();
+      const contentWrapper = footer.querySelector('.items-center');
+      expect(contentWrapper).not.toBeNull();
+    });
+
+    it('should have responsive gap (gap-4 sm:gap-6)', () => {
+      const footer = createFooter();
+      const contentWrapper = footer.querySelector('.flex');
+      expect(contentWrapper?.className).toContain('gap-4');
+      expect(contentWrapper?.className).toContain('sm:gap-6');
+    });
+  });
+
+  describe('Accessibility', () => {
+    it('should have proper role attribute (contentinfo)', () => {
+      const footer = createFooter();
       expect(footer.getAttribute('role')).toBe('contentinfo');
     });
 
-    it('should have aria-label on navigation', () => {
+    it('should have semantic HTML structure', () => {
       const footer = createFooter();
-      const nav = footer.querySelector('nav');
-      
-      expect(nav?.getAttribute('aria-label')).toBe('Footer navigation');
-    });
-
-    it('should use semantic HTML structure', () => {
-      const footer = createFooter();
-      
       expect(footer.tagName).toBe('FOOTER');
-      expect(footer.querySelector('nav')).toBeTruthy();
-      expect(footer.querySelector('p')).toBeTruthy();
     });
 
-    it('should have minimum font size of 14px on mobile', () => {
+    it('should have readable text on all screen sizes', () => {
       const footer = createFooter();
-      const links = footer.querySelectorAll('nav a');
+      const copyright = footer.querySelector('p');
       
-      links.forEach(link => {
-        // text-sm is 14px
-        expect(link.className).toMatch(/text-sm/);
-      });
+      // Minimum 12px on mobile (text-xs)
+      expect(copyright?.className).toContain('text-xs');
+      // Scales up on larger screens
+      expect(copyright?.className).toContain('sm:text-sm');
+      expect(copyright?.className).toContain('md:text-base');
     });
 
-    it('should have adequate spacing for touch targets', () => {
+    it('should have adequate color contrast', () => {
       const footer = createFooter();
-      const nav = footer.querySelector('nav');
-      
-      // Gap provides spacing between touch targets
-      expect(nav?.className).toMatch(/gap-3/); // Minimum 12px gap
+      const copyright = footer.querySelector('p');
+      // text-gray-400 provides adequate contrast on dark background
+      expect(copyright?.className).toContain('text-gray-400');
     });
   });
 
-  describe('AC5: Typecheck passes', () => {
-    it('should have correct types for FooterConfig', () => {
-      const config: FooterConfig = {
-        copyrightText: 'Test copyright',
-        links: [
-          { label: 'Home', href: '/', external: false }
-        ]
-      };
-      
-      expect(config.copyrightText).toBe('Test copyright');
-      expect(config.links).toHaveLength(1);
-    });
-
-    it('should have correct types for FooterLink', () => {
-      const link: FooterLink = {
-        label: 'Test',
-        href: 'https://example.com',
-        external: true
-      };
-      
-      expect(link.label).toBe('Test');
-      expect(link.href).toBe('https://example.com');
-      expect(link.external).toBe(true);
-    });
-
-    it('should accept partial configuration', () => {
-      const config: Partial<FooterConfig> = {
-        copyrightText: 'Custom copyright'
-      };
-      
+  describe('Typecheck', () => {
+    it('should accept FooterConfig with copyrightText', () => {
+      const config = { copyrightText: 'Test' };
       const footer = createFooter(config);
-      const copyright = footer.querySelector('p');
-      
-      expect(copyright?.textContent).toBe('Custom copyright');
+      expect(footer).toBeDefined();
     });
 
-    it('should use default config when no config provided', () => {
+    it('should accept empty config', () => {
+      const footer = createFooter({});
+      expect(footer).toBeDefined();
+    });
+
+    it('should accept no config', () => {
       const footer = createFooter();
-      const copyright = footer.querySelector('p');
-      
-      expect(copyright?.textContent).toBe(DEFAULT_FOOTER_CONFIG.copyrightText);
+      expect(footer).toBeDefined();
+    });
+
+    it('should use Partial<FooterConfig> type', () => {
+      const partialConfig: Partial<{ copyrightText: string }> = {
+        copyrightText: 'Partial'
+      };
+      const footer = createFooter(partialConfig);
+      expect(footer).toBeDefined();
     });
   });
 
-  describe('Footer Component - Core Functionality', () => {
-    it('should create footer element', () => {
-      const footer = createFooter();
-      
-      expect(footer).toBeInstanceOf(HTMLElement);
-      expect(footer.id).toBe('chaoscraft-footer');
-    });
-
+  describe('Mount functions', () => {
     it('should mount footer to body by default', () => {
       const footer = mountFooter();
-      
-      expect(footer).toBeTruthy();
       expect(document.body.contains(footer)).toBe(true);
+      expect(document.body.lastChild).toBe(footer);
     });
 
     it('should mount footer to specific container', () => {
       const container = document.createElement('div');
-      container.id = 'footer-container';
+      container.id = 'test-container';
       document.body.appendChild(container);
       
-      const footer = mountFooter('footer-container');
-      
-      expect(footer).toBeTruthy();
+      const footer = mountFooter('test-container');
       expect(container.contains(footer)).toBe(true);
     });
 
     it('should return null if container not found', () => {
-      const footer = mountFooter('non-existent-container');
-      
+      const footer = mountFooter('non-existent');
       expect(footer).toBeNull();
     });
 
     it('should unmount footer', () => {
       mountFooter();
-      unmountFooter();
+      expect(getFooter()).not.toBeNull();
       
-      const footer = document.getElementById('chaoscraft-footer');
-      expect(footer).toBeNull();
+      unmountFooter();
+      expect(getFooter()).toBeNull();
     });
 
-    it('should get footer element', () => {
+    it('should get footer element after mount', () => {
       mountFooter();
       const footer = getFooter();
-      
-      expect(footer).toBeTruthy();
+      expect(footer).not.toBeNull();
       expect(footer?.id).toBe('chaoscraft-footer');
     });
 
-    it('should create default navigation links', () => {
-      const footer = createFooter();
-      const links = footer.querySelectorAll('nav a');
-      
-      expect(links).toHaveLength(DEFAULT_FOOTER_CONFIG.links.length);
+    it('should return null from getFooter if not mounted', () => {
+      const footer = getFooter();
+      expect(footer).toBeNull();
     });
 
-    it('should handle external links correctly', () => {
-      const config: Partial<FooterConfig> = {
-        links: [
-          { label: 'External', href: 'https://example.com', external: true }
-        ]
-      };
-      const footer = createFooter(config);
-      const externalLink = footer.querySelector('a[target="_blank"]');
-      
-      expect(externalLink).toBeTruthy();
-      expect(externalLink?.getAttribute('rel')).toBe('noopener noreferrer');
-    });
-
-    it('should not add target attribute to internal links', () => {
-      const config: Partial<FooterConfig> = {
-        links: [
-          { label: 'Internal', href: '/', external: false }
-        ]
-      };
-      const footer = createFooter(config);
-      const internalLink = footer.querySelector('a');
-      
-      expect(internalLink?.getAttribute('target')).toBeNull();
+    it('should handle multiple unmount calls gracefully', () => {
+      mountFooter();
+      unmountFooter();
+      unmountFooter(); // Should not throw
+      expect(getFooter()).toBeNull();
     });
   });
 
-  describe('Responsive Classes Validation', () => {
-    it('should use mobile-first approach with responsive breakpoints', () => {
+  describe('DOM structure', () => {
+    it('should have correct ID', () => {
       const footer = createFooter();
-      const container = footer.querySelector('div');
-      
-      // Base styles (mobile-first)
-      expect(container?.className).toMatch(/px-4/);
-      // Responsive overrides
-      expect(container?.className).toMatch(/sm:px-6/);
-      expect(container?.className).toMatch(/lg:px-8/);
+      expect(footer.id).toBe('chaoscraft-footer');
     });
 
-    it('should have responsive typography classes', () => {
+    it('should have nested container structure', () => {
       const footer = createFooter();
-      const copyright = footer.querySelector('p');
       
-      expect(copyright?.className).toMatch(/text-xs/);
-      expect(copyright?.className).toMatch(/sm:text-sm/);
+      // footer > div.container > div.flex > p
+      const container = footer.querySelector('.max-w-7xl');
+      const contentWrapper = container?.querySelector('.flex');
+      const paragraph = contentWrapper?.querySelector('p');
+      
+      expect(paragraph).not.toBeNull();
     });
 
-    it('should have responsive navigation layout classes', () => {
+    it('should have only copyright paragraph in content wrapper', () => {
       const footer = createFooter();
-      const nav = footer.querySelector('nav');
-      
-      expect(nav?.className).toMatch(/flex-col/);
-      expect(nav?.className).toMatch(/sm:flex-row/);
-    });
-
-    it('should have proper z-index and backdrop styling', () => {
-      const footer = createFooter();
-      
-      expect(footer.className).toMatch(/backdrop-blur-md/);
-    });
-
-    it('should have gradient divider', () => {
-      const footer = createFooter();
-      const divider = footer.querySelector('.h-px');
-      
-      expect(divider?.className).toMatch(/bg-gradient-to-r/);
-      expect(divider?.className).toMatch(/from-transparent/);
-      expect(divider?.className).toMatch(/to-transparent/);
-    });
-
-    it('should have animated emoji', () => {
-      const footer = createFooter();
-      const emoji = footer.querySelector('span[aria-hidden="true"]');
-      
-      expect(emoji?.className).toMatch(/animate-pulse/);
-      expect(emoji?.textContent).toBe('🌌');
+      const contentWrapper = footer.querySelector('.flex.flex-col');
+      expect(contentWrapper?.children.length).toBe(1);
+      expect(contentWrapper?.children[0].tagName).toBe('P');
     });
   });
 
-  describe('Layout and Styling', () => {
-    it('should have border-top for visual separation', () => {
-      const footer = createFooter();
+  describe('Error handling', () => {
+    it('should handle missing container gracefully', () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       
-      expect(footer.className).toMatch(/border-t/);
-      expect(footer.className).toMatch(/border-white\/10/);
+      const footer = mountFooter('non-existent-container');
+      expect(footer).toBeNull();
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Footer container with id "non-existent-container" not found'
+      );
+      
+      consoleSpy.mockRestore();
     });
 
-    it('should have semi-transparent background', () => {
-      const footer = createFooter();
-      
-      expect(footer.className).toMatch(/bg-slate-900\/95/);
-    });
-
-    it('should use flexbox for layout', () => {
-      const footer = createFooter();
-      const contentWrapper = footer.querySelector('div > div');
-      
-      expect(contentWrapper?.className).toMatch(/flex/);
-    });
-
-    it('should center all content horizontally', () => {
-      const footer = createFooter();
-      const contentWrapper = footer.querySelector('div > div');
-      
-      expect(contentWrapper?.className).toMatch(/items-center/);
-    });
-
-    it('should center copyright text', () => {
-      const footer = createFooter();
-      const copyright = footer.querySelector('p');
-      
-      expect(copyright?.className).toMatch(/text-center/);
-    });
-
-    it('should have centered container', () => {
-      const footer = createFooter();
-      const container = footer.querySelector('div');
-      
-      expect(container?.className).toMatch(/mx-auto/);
+    it('should handle empty body gracefully', () => {
+      document.body.innerHTML = '';
+      const footer = mountFooter();
+      expect(footer).not.toBeNull();
+      expect(document.body.contains(footer)).toBe(true);
     });
   });
 });

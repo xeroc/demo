@@ -2,6 +2,69 @@
 # Simple typecheck for responsive components
 # Checks if the TypeScript code is syntactically valid
 
+echo "Checking navbar component TypeScript syntax..."
+
+# Basic checks for the navbar component
+if grep -q "export function createNavbar" src/navbarComponent.ts; then
+    echo "✓ createNavbar function exported"
+else
+    echo "✗ createNavbar function missing"
+    exit 1
+fi
+
+if grep -q "export function mountNavbar" src/navbarComponent.ts; then
+    echo "✓ mountNavbar function exported"
+else
+    echo "✗ mountNavbar function missing"
+    exit 1
+fi
+
+if grep -q "export function unmountNavbar" src/navbarComponent.ts; then
+    echo "✓ unmountNavbar function exported"
+else
+    echo "✗ unmountNavbar function missing"
+    exit 1
+fi
+
+if grep -q "export function getNavbar" src/navbarComponent.ts; then
+    echo "✓ getNavbar function exported"
+else
+    echo "✗ getNavbar function missing"
+    exit 1
+fi
+
+# Check that navbar has logo icon and text only
+if grep -q "🌌" src/navbarComponent.ts; then
+    echo "✓ Logo icon present in navbar"
+else
+    echo "✗ Logo icon missing in navbar"
+    exit 1
+fi
+
+if grep -q "ChaosCraft" src/navbarComponent.ts; then
+    echo "✓ Logo text present in navbar"
+else
+    echo "✗ Logo text missing in navbar"
+    exit 1
+fi
+
+# Check navbar responsive classes
+if grep -q "text-lg" src/navbarComponent.ts && grep -q "sm:text-xl" src/navbarComponent.ts; then
+    echo "✓ Navbar responsive text classes present"
+else
+    echo "✗ Navbar responsive text classes missing"
+    exit 1
+fi
+
+# Check accessibility
+if grep setAttribute src/navbarComponent.ts | grep -q "role"; then
+    echo "✓ Navbar ARIA role present"
+else
+    echo "✗ Navbar ARIA role missing"
+    exit 1
+fi
+
+echo ""
 echo "Checking footer component TypeScript syntax..."
 
 # Basic checks for the footer component
@@ -33,38 +96,47 @@ else
     exit 1
 fi
 
-# Check that responsive classes are present
-if grep -q "flex-col" src/footerComponent.ts; then
-    echo "✓ Mobile-first flex-col class present"
+# Check footer has copyright with year 2026
+if grep -q "2026" src/footerComponent.ts; then
+    echo "✓ Footer copyright year 2026 present"
 else
-    echo "✗ flex-col class missing"
+    echo "✗ Footer copyright year 2026 missing"
     exit 1
 fi
 
-if grep -q "sm:flex-row" src/footerComponent.ts; then
-    echo "✓ Responsive sm:flex-row class present"
+if grep -q "Built by chaos, one dollar at a time" src/footerComponent.ts; then
+    echo "✓ Footer copyright text present"
 else
-    echo "✗ sm:flex-row class missing"
+    echo "✗ Footer copyright text missing"
     exit 1
 fi
 
-if grep -q "md:gap-" src/footerComponent.ts; then
-    echo "✓ Desktop gap classes present"
+# Check footer has no navigation links
+if ! grep -q '<a' src/footerComponent.ts; then
+    echo "✓ Footer has no links"
 else
-    echo "✗ Desktop gap classes missing"
+    echo "✗ Footer should not have links"
     exit 1
 fi
 
-# Check accessibility - using setAttribute
+# Check footer responsive classes
+if grep -q "text-xs" src/footerComponent.ts && grep -q "sm:text-sm" src/footerComponent.ts; then
+    echo "✓ Footer responsive text classes present"
+else
+    echo "✗ Footer responsive text classes missing"
+    exit 1
+fi
+
+# Check accessibility
 if grep setAttribute src/footerComponent.ts | grep -q "role"; then
     if grep setAttribute src/footerComponent.ts | grep role | grep -q "contentinfo"; then
-        echo "✓ ARIA role present"
+        echo "✓ Footer ARIA role present"
     else
-        echo "✗ ARIA role missing"
+        echo "✗ Footer ARIA role missing"
         exit 1
     fi
 else
-    echo "✗ ARIA role missing"
+    echo "✗ Footer ARIA role missing"
     exit 1
 fi
 
@@ -116,6 +188,14 @@ if [ -f "src/responsiveUtils.ts" ]; then
     fi
 else
     echo "✗ responsiveUtils.ts file not found"
+    exit 1
+fi
+
+# Check main.ts integrates navbar instead of header
+if grep -q "mountNavbar" src/main.ts && ! grep -q "mountHeader" src/main.ts; then
+    echo "✓ Navbar integrated in main.ts (header removed)"
+else
+    echo "✗ Navbar not properly integrated in main.ts"
     exit 1
 fi
 
