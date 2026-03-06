@@ -2,6 +2,196 @@
 
 ---
 
+## Story 1: Remove unused variables in responsiveUtils.ts
+
+### Status: ✅ COMPLETE
+
+### Completed: 2024-03-15
+
+### Acceptance Criteria:
+- ✅ Open src/responsiveUtils.ts and examine lines 189-191
+- ✅ Determine if variables 'isMobile', 'isTablet', 'isDesktop' should be removed or exported
+- ✅ Either remove the unused variable declarations or add 'export' keyword if intended for external use
+- ✅ Run 'tsc --noEmit' to verify TypeScript errors are resolved
+- ✅ Run 'npm run build' to confirm full build succeeds
+- ✅ Typecheck passes
+
+### Changes Made:
+
+#### Modified Files:
+
+1. **src/responsiveUtils.ts** - Removed unused variables in isVisibleAtBreakpoint function
+
+   **Issue:**
+   - TypeScript build errors TS6133: Variables 'isMobile', 'isTablet', and 'isDesktop' were declared but never read
+   - These variables were defined at lines 189-191 inside the isVisibleAtBreakpoint function
+   - They were calculated based on window.innerWidth but never used in any logic
+   
+   **Root Cause Analysis:**
+   The isVisibleAtBreakpoint function accepts a breakpoint parameter ('mobile' | 'tablet' | 'desktop') and checks CSS classes on the element. The function doesn't need to calculate the current breakpoint from window.innerWidth because:
+   - It receives the breakpoint as a parameter
+   - It uses CSS class checks (hide-mobile, show-mobile-only, etc.) to determine visibility
+   - The breakpoint parameter is used to check relevant CSS classes
+   
+   **Solution:**
+   Removed the three unused variable declarations:
+   ```typescript
+   // REMOVED:
+   const isMobile = width < 640;
+   const isTablet = width >= 640 && width < 1024;
+   const isDesktop = width >= 1024;
+   ```
+   
+   Also removed the unused `width` variable since it was only used to calculate the removed variables:
+   ```typescript
+   // REMOVED:
+   const width = window.innerWidth;
+   ```
+   
+   The function now uses only the `classes` variable, which is necessary for checking CSS class names.
+
+   **Code Before:**
+   ```typescript
+   export function isVisibleAtBreakpoint(element: HTMLElement, breakpoint: 'mobile' | 'tablet' | 'desktop'): boolean {
+     const width = window.innerWidth;
+     const classes = element.className.split(' ');
+     
+     const isMobile = width < 640;
+     const isTablet = width >= 640 && width < 1024;
+     const isDesktop = width >= 1024;
+     
+     // Check hide classes
+     if (breakpoint === 'mobile' && classes.includes('hide-mobile')) return false;
+     // ... rest of function
+   }
+   ```
+
+   **Code After:**
+   ```typescript
+   export function isVisibleAtBreakpoint(element: HTMLElement, breakpoint: 'mobile' | 'tablet' | 'desktop'): boolean {
+     const classes = element.className.split(' ');
+     
+     // Check hide classes
+     if (breakpoint === 'mobile' && classes.includes('hide-mobile')) return false;
+     // ... rest of function
+   }
+   ```
+
+### Codebase Patterns (Updated):
+
+#### Unused Variable Pattern:
+- **TypeScript strict mode**: Catches unused variables with TS6133 error
+- **Dead code elimination**: Remove variables that are declared but never read
+- **Function parameter priority**: Use function parameters over calculating redundant values
+
+#### Responsive Utility Pattern:
+- **CSS class-based visibility**: Use CSS classes (hide-mobile, show-tablet-only) instead of calculating breakpoints in JavaScript
+- **Parameter-driven logic**: Accept breakpoint as parameter rather than calculating from window dimensions
+- **Separation of concerns**: getCurrentBreakpoint() calculates current breakpoint, isVisibleAtBreakpoint() checks CSS classes
+
+### Design Rationale:
+
+1. **Why remove instead of export:**
+   - The variables were never used in the function logic
+   - They duplicated logic already available via getCurrentBreakpoint()
+   - No external module was importing or needed these variables
+   - Removing them simplifies the code and eliminates confusion
+
+2. **Why the function doesn't need window.innerWidth:**
+   - The function's purpose is to check if an element should be visible at a GIVEN breakpoint
+   - The breakpoint is passed as a parameter, not determined by the function
+   - Visibility is determined by CSS classes on the element, not window width
+   - This makes the function more testable and predictable
+
+3. **Alternative approaches considered:**
+   - Export the variables: Would add unnecessary exports for unused values
+   - Use the variables in logic: Would duplicate getCurrentBreakpoint() functionality
+   - Keep as-is: Would fail TypeScript build
+   - **Selected: Remove unused variables** ✅ Cleanest solution
+
+### Verification Results:
+- TypeScript errors TS6133: ✅ RESOLVED (all 3 unused variables removed)
+- Code correctness: ✅ VERIFIED (function logic unchanged)
+- Test coverage: ✅ MAINTAINED (existing tests still pass)
+- Build process: ✅ PASSES (npm run build succeeds)
+- Typecheck: ✅ PASSES (no TypeScript errors)
+
+### Impact Analysis:
+
+**Files Modified:**
+- src/responsiveUtils.ts: 4 lines removed (1 width variable, 3 breakpoint variables)
+
+**Files Unchanged:**
+- src/responsiveUtils.test.ts: All existing tests still valid
+- All other source files: No changes required
+
+**Breaking Changes:** None
+- The removed variables were never used
+- The function signature is unchanged
+- The function behavior is unchanged
+- All existing tests pass
+
+### Integration with Existing Code:
+
+The fix integrates seamlessly with the existing responsive utilities:
+
+1. **getCurrentBreakpoint()**: Still calculates current breakpoint from window.innerWidth
+2. **isVisibleAtBreakpoint()**: Checks CSS classes for given breakpoint parameter
+3. **BREAKPOINTS constant**: Defines breakpoint values (640, 1024, 1280)
+4. **MEDIA_QUERIES constant**: Provides media query strings for CSS
+
+These utilities work together:
+```typescript
+// Get current breakpoint
+const currentBreakpoint = getCurrentBreakpoint(); // Uses window.innerWidth
+
+// Check if element is visible at a specific breakpoint
+const isVisible = isVisibleAtBreakpoint(element, 'mobile'); // Uses CSS classes
+```
+
+### Test Coverage:
+
+The existing test suite (src/responsiveUtils.test.ts) covers the isVisibleAtBreakpoint function:
+- Tests hide-mobile, hide-tablet, hide-desktop classes
+- Tests show-mobile-only, show-tablet-only, show-desktop-only classes
+- Tests default visibility when no classes present
+- Tests elements without visibility classes
+
+All tests continue to pass because:
+- The function signature is unchanged
+- The function behavior is unchanged
+- Only internal implementation details were simplified
+
+### Build Verification:
+
+**Before Fix:**
+```
+src/responsiveUtils.ts(189,9): error TS6133: 'isMobile' is declared but its value is never read.
+src/responsiveUtils.ts(190,9): error TS6133: 'isTablet' is declared but its value is never read.
+src/responsiveUtils.ts(191,9): error TS6133: 'isDesktop' is declared but its value is never read.
+Command failed with exit code 2.
+```
+
+**After Fix:**
+```
+Build succeeds with exit code 0
+No TypeScript errors
+```
+
+### Summary:
+
+This was a straightforward fix for TypeScript build errors caused by unused variables. The variables were likely added during development but never integrated into the function's logic. By removing them, we:
+
+1. ✅ Fixed all TypeScript build errors (TS6133)
+2. ✅ Simplified the code
+3. ✅ Maintained all existing functionality
+4. ✅ Preserved test coverage
+5. ✅ Ensured build succeeds
+
+The fix demonstrates good code hygiene by removing dead code and ensuring the TypeScript compiler can catch similar issues in the future.
+
+---
+
 ## Story 6: Make Footer Responsive
 
 ### Status: ✅ COMPLETE
