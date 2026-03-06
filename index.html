@@ -5,6 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hello World</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Responsive Foundation */
+        :root {
+            /* Breakpoint values for reference and potential JS usage */
+            --breakpoint-mobile: 0;
+            --breakpoint-tablet: 640px;
+            --breakpoint-desktop: 1024px;
+            --breakpoint-wide: 1280px;
+        }
+        
+        /* Base box-sizing for consistent sizing */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+    </style>
 </head>
 <body class="min-h-screen flex items-center justify-center">
     <div class="text-center relative z-10">
