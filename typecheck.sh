@@ -1,5 +1,5 @@
 #!/bin/bash
-# Simple typecheck for footer component
+# Simple typecheck for responsive components
 # Checks if the TypeScript code is syntactically valid
 
 echo "Checking footer component TypeScript syntax..."
@@ -55,11 +55,75 @@ else
     exit 1
 fi
 
-# Check accessibility
-if grep -q "role=\"contentinfo\"" src/footerComponent.ts; then
-    echo "✓ ARIA role present"
+# Check accessibility - using setAttribute
+if grep setAttribute src/footerComponent.ts | grep -q "role"; then
+    if grep setAttribute src/footerComponent.ts | grep role | grep -q "contentinfo"; then
+        echo "✓ ARIA role present"
+    else
+        echo "✗ ARIA role missing"
+        exit 1
+    fi
 else
     echo "✗ ARIA role missing"
+    exit 1
+fi
+
+echo ""
+echo "Checking responsive utilities..."
+
+# Check responsive utilities module
+if [ -f "src/responsiveUtils.ts" ]; then
+    if grep -q "export function injectResponsiveUtilities" src/responsiveUtils.ts; then
+        echo "✓ injectResponsiveUtilities function exported"
+    else
+        echo "✗ injectResponsiveUtilities function missing"
+        exit 1
+    fi
+    
+    if grep -q "export function validateTouchTarget" src/responsiveUtils.ts; then
+        echo "✓ validateTouchTarget function exported"
+    else
+        echo "✗ validateTouchTarget function missing"
+        exit 1
+    fi
+    
+    if grep -q "export function hasHorizontalScroll" src/responsiveUtils.ts; then
+        echo "✓ hasHorizontalScroll function exported"
+    else
+        echo "✗ hasHorizontalScroll function missing"
+        exit 1
+    fi
+    
+    if grep -q "touch-target" src/responsiveUtils.ts; then
+        echo "✓ Touch target utility class present"
+    else
+        echo "✗ Touch target utility class missing"
+        exit 1
+    fi
+    
+    if grep -q "text-readable" src/responsiveUtils.ts; then
+        echo "✓ Text readability utility class present"
+    else
+        echo "✗ Text readability utility class missing"
+        exit 1
+    fi
+    
+    if grep -q "prevent-overflow-x" src/responsiveUtils.ts; then
+        echo "✓ Overflow prevention utility class present"
+    else
+        echo "✗ Overflow prevention utility class missing"
+        exit 1
+    fi
+else
+    echo "✗ responsiveUtils.ts file not found"
+    exit 1
+fi
+
+# Check main.ts integrates responsive utilities
+if grep -q "injectResponsiveUtilities" src/main.ts; then
+    echo "✓ Responsive utilities integrated in main.ts"
+else
+    echo "✗ Responsive utilities not integrated in main.ts"
     exit 1
 fi
 

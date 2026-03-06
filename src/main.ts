@@ -7,10 +7,13 @@ import { mountDancingRobot } from './robotSvg';
 import { mountBanner } from './bannerComponent';
 import { mountHeader } from './headerComponent';
 import { mountFooter } from './footerComponent';
+import { injectResponsiveUtilities } from './responsiveUtils';
 
 // Initialize when DOM is ready
 if (typeof document !== 'undefined') {
   document.addEventListener('DOMContentLoaded', () => {
+    // Inject responsive utility styles
+    injectResponsiveUtilities();
     // Mount banner at the top of the page
     mountBanner();
     // Mount header after banner
@@ -33,3 +36,13 @@ export { createHeader, mountHeader, unmountHeader, getHeader, setActiveNavItem }
 export type { HeaderConfig, NavItem } from './headerComponent';
 export { createFooter, mountFooter, unmountFooter, getFooter } from './footerComponent';
 export type { FooterConfig, FooterLink } from './footerComponent';
+export { 
+  injectResponsiveUtilities, 
+  isVisibleAtBreakpoint, 
+  validateTouchTarget, 
+  hasHorizontalScroll, 
+  getCurrentBreakpoint,
+  BREAKPOINTS,
+  MEDIA_QUERIES,
+  RESPONSIVE_UTILITY_STYLES
+} from './responsiveUtils';
