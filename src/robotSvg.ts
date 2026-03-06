@@ -3,6 +3,7 @@
  * 
  * Creates an animated robot SVG element with CSS animations for dancing motion.
  * The robot includes head, torso, arms, and legs with distinct IDs for animation targeting.
+ * SVG is responsive and scales fluidly within its container.
  */
 
 /**
@@ -13,11 +14,11 @@ export function createDancingRobot(): SVGElement {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('id', 'dancing-robot');
   svg.setAttribute('viewBox', '0 0 200 300');
-  svg.setAttribute('width', '150');
-  svg.setAttribute('height', '225');
   svg.setAttribute('class', 'dancing-robot');
   svg.setAttribute('role', 'img');
   svg.setAttribute('aria-label', 'Dancing robot animation');
+  // Responsive: removed fixed width and height attributes
+  // SVG will scale based on container and CSS
   
   svg.innerHTML = `
     <defs>
