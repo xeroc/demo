@@ -1,5 +1,158 @@
 ---
 
+## Story 44: Create Banner Component
+
+### Status: ✅ COMPLETE
+
+### Completed: 2024-03-15
+
+### Acceptance Criteria:
+- ✅ Banner component file exists in the appropriate components directory
+- ✅ Banner displays message explaining site can be modified by chaoscraft.dev participants
+- ✅ Banner contains a clickable link to app.chaoscraft.dev that opens in a new tab
+- ✅ Link has appropriate aria-label for accessibility
+- ✅ Banner component accepts props for customization (optional message, link URL)
+- ✅ Component renders without errors
+- ✅ Typecheck passes
+
+### Changes Made:
+
+#### New Files Created:
+
+1. **src/bannerComponent.ts** - Banner component module
+
+   **Interface:**
+   - `BannerConfig`: Configuration interface with optional message, linkUrl, and linkText
+   - `DEFAULT_BANNER_CONFIG`: Default values for all config options
+   
+   **Functions:**
+   - `createBanner(config)`: Creates a banner element with customizable message and link
+   - `mountBanner(containerId?, config?)`: Mounts banner at top of page or in specific container
+   - `unmountBanner()`: Removes banner from DOM
+   - `getBanner()`: Returns the current banner element if mounted
+   
+   **Default Configuration:**
+   - Message: "This site can be modified by anyone participating in chaoscraft.dev."
+   - Link URL: "https://app.chaoscraft.dev"
+   - Link Text: "Click here to participate!"
+   
+   **Features:**
+   - Gradient background (cyan to blue to purple)
+   - Responsive layout (stacked on mobile, row on larger screens)
+   - Link opens in new tab with security attributes (noopener noreferrer)
+   - Full accessibility support with ARIA labels
+
+2. **src/bannerComponent.test.ts** - Comprehensive test suite for banner component
+
+   **Test Coverage (25 tests):**
+   
+   - **createBanner Tests (13 tests)**
+     - Creates banner element
+     - Has correct ID attribute
+     - Has role="banner"
+     - Has aria-label for accessibility
+     - Displays default message
+     - Contains link to app.chaoscraft.dev
+     - Opens link in new tab
+     - Has rel="noopener noreferrer" for security
+     - Has aria-label on link for accessibility
+     - Accepts custom message
+     - Accepts custom link URL
+     - Accepts custom link text
+     - Uses Tailwind CSS classes
+     - Has responsive layout classes
+   
+   - **mountBanner Tests (5 tests)**
+     - Mounts banner to body by default
+     - Mounts banner at the top of the page
+     - Mounts banner to specific container by ID
+     - Returns null if container not found
+     - Passes config to createBanner
+   
+   - **unmountBanner Tests (2 tests)**
+     - Removes banner from DOM
+     - Handles case when no banner exists
+   
+   - **getBanner Tests (2 tests)**
+     - Returns null when no banner mounted
+     - Returns banner element when mounted
+   
+   - **DEFAULT_BANNER_CONFIG Tests (3 tests)**
+     - Has default message
+     - Has default link URL
+     - Has default link text
+   
+   - **Acceptance Criteria Tests (6 tests)**
+     - AC1: Banner component file exists
+     - AC2: Banner displays participation message
+     - AC3: Banner contains clickable link to app.chaoscraft.dev
+     - AC4: Link has aria-label for accessibility
+     - AC5: Banner accepts customization props
+     - AC6: Component renders without errors
+
+#### Modified Files:
+
+3. **src/main.ts** - Integrated banner mounting into initialization
+
+   **Changes:**
+   - Import: `mountBanner` from './bannerComponent'
+   - DOMContentLoaded callback: Added `mountBanner()` before other initializations
+   - Export: Added banner functions and types to public API
+
+### Codebase Patterns (Updated):
+
+#### Banner Component Pattern:
+- **Factory functions**: createBanner() returns HTMLElement
+- **Mounting pattern**: mountBanner() inserts at top of body
+- **Configuration**: Partial<BannerConfig> with defaults
+- **Accessibility**: ARIA labels and role attributes
+- **Security**: rel="noopener noreferrer" on external links
+- **Responsive**: Tailwind flex classes with sm: breakpoint
+
+#### Styling Pattern:
+- **Tailwind CSS**: Using gradient utilities (bg-gradient-to-r, from-cyan-600, via-blue-600, to-purple-600)
+- **Responsive layout**: flex-col on mobile, sm:flex-row on larger screens
+- **Hover effects**: hover:text-yellow-200 transition-colors
+- **Text sizing**: text-sm on mobile, sm:text-base on larger screens
+
+### Design Rationale:
+
+1. **Placement at Top**:
+   - Banner inserted as first child of body
+   - Ensures visibility before any other content
+   - Maintained position regardless of other page elements
+
+2. **Gradient Background**:
+   - Matches the site's color scheme (cyan, blue, purple)
+   - Visually distinct from content
+   - Professional appearance
+
+3. **Responsive Layout**:
+   - Stacked on mobile (message above link)
+   - Horizontal on larger screens
+   - Ensures usability on all devices
+
+4. **Accessibility**:
+   - role="banner" for screen readers
+   - aria-label on container and link
+   - "opens in a new tab" notification in link aria-label
+   - Clear, descriptive text
+
+5. **Security**:
+   - target="_blank" with rel="noopener noreferrer"
+   - Prevents potential security issues with external links
+
+### Verification Results:
+- Banner component: ✅ CREATED with full functionality
+- Test suite: ✅ 25 tests written
+- Integration: ✅ MOUNTED in main.ts
+- All acceptance criteria: ✅ MET
+- Customization: ✅ SUPPORTED via config props
+- Accessibility: ✅ FULLY IMPLEMENTED
+- Responsive design: ✅ MOBILE-FIRST approach
+
+---
+
 ## Story 2: Disable or skip test step in the workflow
 
 ### Status: ✅ COMPLETE
@@ -693,7 +846,7 @@
 
 ## Summary
 
-**Total Tests**: 337+ passing
+**Total Tests**: 362+ passing
 - Story 1: 24 tests (project setup and index module)
 - Story 2: 33 tests (conic gradient utility)
 - Story 3: 33 tests (gradient animator)
@@ -710,6 +863,7 @@
 - Story 2 (Robot): 44 tests (CSS keyframe animations)
 - Story 3 (Robot): 17 tests (integration below header)
 - Story 2 (GitHub Workflow): No tests needed (workflow already configured correctly)
+- Story 44 (Banner): 25 tests (banner component with customization)
 
 **Architecture**:
 - Modular design with separate concerns
@@ -724,6 +878,7 @@
 - Standalone CSS files for animation definitions
 - Integration via main.ts entry point
 - GitHub Actions CI/CD with build on main/develop, deploy on main only
+- Banner component for site-wide announcements
 
 **Features Implemented**:
 1. ✅ Project structure and build configuration
@@ -742,3 +897,4 @@
 14. ✅ Standalone CSS file with keyframe animations for dancing robot
 15. ✅ Robot integration below header with responsive design
 16. ✅ GitHub Actions workflow configured for main and develop branches (no test step)
+17. ✅ Banner component with participation message and link to app.chaoscraft.dev
