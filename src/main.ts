@@ -8,6 +8,7 @@ import { mountBanner } from './bannerComponent';
 import { mountNavbar } from './navbarComponent';
 import { mountFooter } from './footerComponent';
 import { injectResponsiveUtilities } from './responsiveUtils';
+import { mountConsole } from './consoleComponent';
 
 // Initialize when DOM is ready
 if (typeof document !== 'undefined') {
@@ -26,6 +27,9 @@ if (typeof document !== 'undefined') {
     
     // Mount dancing robot
     mountDancingRobot('robot-container');
+    
+    // Mount console at the bottom (mobile-responsive with keyboard handling)
+    mountConsole();
     
     // Mount footer at the bottom (copyright only, no links)
     mountFooter();
@@ -51,3 +55,16 @@ export {
   MEDIA_QUERIES,
   RESPONSIVE_UTILITY_STYLES
 } from './responsiveUtils';
+export { 
+  createConsole, 
+  mountConsole, 
+  unmountConsole, 
+  getConsole, 
+  getConsoleInput, 
+  getConsoleOutput,
+  appendConsoleOutput,
+  clearConsoleOutput,
+  isConsoleCollapsed,
+  setConsoleCollapsed
+} from './consoleComponent';
+export type { ConsoleConfig } from './consoleComponent';
