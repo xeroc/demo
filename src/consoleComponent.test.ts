@@ -1,5 +1,6 @@
 /**
  * Tests for Console Component - Story: Handle keyboard visibility on mobile
+ * Story: Add collapse/expand toggle for console on mobile
  * 
  * Acceptance Criteria:
  * - When mobile keyboard appears, console height adjusts dynamically
@@ -7,6 +8,11 @@
  * - Use CSS `dvh` (dynamic viewport height) or `visualViewport` API if needed
  * - Solution works on both iOS Safari and Android Chrome
  * - Console input field remains accessible when keyboard is open
+ * - Toggle button visible on mobile console header
+ * - Collapsed state shows minimal console bar (input field or expand button only)
+ * - Expanded state shows full console at reduced height
+ * - Toggle state persists during session
+ * - Smooth CSS transition between states
  * - Typecheck passes
  */
 
@@ -20,6 +26,8 @@ import {
   getConsoleOutput,
   appendConsoleOutput,
   clearConsoleOutput,
+  isConsoleCollapsed,
+  setConsoleCollapsed,
   DEFAULT_CONSOLE_CONFIG
 } from './consoleComponent';
 
@@ -455,6 +463,8 @@ describe('Console Component', () => {
       expect(typeof getConsoleOutput).toBe('function');
       expect(typeof appendConsoleOutput).toBe('function');
       expect(typeof clearConsoleOutput).toBe('function');
+      expect(typeof isConsoleCollapsed).toBe('function');
+      expect(typeof setConsoleCollapsed).toBe('function');
     });
 
     it('should have correct DEFAULT_CONSOLE_CONFIG type', () => {
@@ -463,6 +473,7 @@ describe('Console Component', () => {
       expect(typeof DEFAULT_CONSOLE_CONFIG.maxHeight).toBe('string');
       expect(typeof DEFAULT_CONSOLE_CONFIG.minHeight).toBe('string');
       expect(typeof DEFAULT_CONSOLE_CONFIG.maxMobileHeight).toBe('string');
+      expect(typeof DEFAULT_CONSOLE_CONFIG.collapsedHeight).toBe('string');
     });
 
     it('should return HTMLElement from createConsole', () => {
@@ -687,6 +698,501 @@ describe('Console Component', () => {
 
     it('should handle unmount when not mounted', () => {
       expect(() => unmountConsole()).not.toThrow();
+    });
+  });
+
+  // ============================================================
+  // NEW TESTS FOR STORY: Collapse/Expand Toggle
+  // ============================================================
+
+  describe('Story: Add collapse/expand toggle for console on mobile', () => {
+    describe('AC1: Toggle button visible on mobile console header', () => {
+      it('should have mobile header with toggle button', () => {
+        const console = createConsole();
+        const header = console.querySelector('.console-mobile-header');
+        expect(header).toBeDefined();
+      });
+
+      it('should have toggle button in mobile header', () => {
+        const console = createConsole();
+        const toggleBtn = console.querySelector('#console-toggle');
+        expect(toggleBtn).toBeDefined();
+        expect(toggleBtn?.tagName).toBe('BUTTON');
+      });
+
+      it('should display console label in header', () => {
+        const console = createConsole();
+        const header = console.querySelector('.console-mobile-header');
+        expect(header?.textContent).toContain('Console');
+      });
+
+      it('should have toggle icon (chevron)', () => {
+        const console = createConsole();
+        const toggleIcon = console.querySelector('.toggle-icon');
+        expect(toggleIcon).toBeDefined();
+      });
+
+      it('should be visible only on mobile (md:hidden)', () => {
+        const console = createConsole();
+        const header = console.querySelector('.console-mobile-header');
+        expect(header?.className).toMatch(/md:hidden/);
+      });
+
+      it('should have proper ARIA attributes on toggle', () => {
+        const console = createConsole();
+        const toggleBtn = console.querySelector('#console-toggle') as HTMLButtonElement;
+        expect(toggleBtn?.getAttribute('aria-label')).toBe('Toggle console');
+        expect(toggleBtn?.getAttribute('aria-expanded')).toBe('true');
+      });
+    });
+
+    describe('AC2: Collapsed state shows minimal console bar', () => {
+      it('should collapse when toggle is clicked', () => {
+        const consoleEl = createConsole();
+        document.body.appendChild(consoleEl);
+        
+        const header = consoleEl.querySelector('.console-mobile-header') as HTMLElement;
+        header.click();
+        
+        expect(isConsoleCollapsed()).toBe(true);
+      });
+
+      it('should show minimal height when collapsed', () => {
+        const consoleEl = createConsole();
+        document.body.appendChild(consoleEl);
+        
+        const header = consoleEl.querySelector('.console-mobile-header') as HTMLElement;
+        header.click();
+        
+        const maxHeight = parseInt(consoleEl.style.maxHeight);
+        expect(maxHeight).toBeLessThanOrEqual(60); // Should be ~48px
+      });
+
+      it('should hide output area when collapsed', () => {
+        const consoleEl = createConsole();
+        document.body.appendChild(consoleEl);
+        
+        const header = consoleEl.querySelector('.console-mobile-header') as HTMLElement;
+        header.click();
+        
+        const output = getConsoleOutput();
+        expect(output?.style.display).toBe('none');
+      });
+
+      it('should hide input area when collapsed', () => {
+        const consoleEl = createConsole();
+        document.body.appendChild(consoleEl);
+        
+        const header = consoleEl.querySelector('.console-mobile-header') as HTMLElement;
+        header.click();
+        
+        const inputWrapper = consoleEl.querySelector('.console-input-wrapper') as HTMLElement;
+        expect(inputWrapper?.style.display).toBe('none');
+      });
+
+      it('should show only header bar when collapsed', () => {
+        const consoleEl = createConsole();
+        document.body.appendChild(consoleEl);
+        
+        const header = consoleEl.querySelector('.console-mobile-header') as HTMLElement;
+        header.click();
+        
+        const headerHeight = parseInt(consoleEl.style.maxHeight);
+        expect(headerHeight).toBeLessThanOrEqual(parseInt(DEFAULT_CONSOLE_CONFIG.collapsedHeight) + 10);
+      });
+
+      it('should change toggle icon to "expand" when collapsed', () => {
+        const consoleEl = createConsole();
+        document.body.appendChild(consoleEl);
+        
+        const header = consoleEl.querySelector('.console-mobile-header') as HTMLElement;
+        header.click();
+        
+        const toggleIcon = consoleEl.querySelector('.toggle-icon');
+        expect(toggleIcon?.textContent).toBe('▲');
+      });
+
+      it('should change toggle text to "Expand" when collapsed', () => {
+        const consoleEl = createConsole();
+        document.body.appendChild(consoleEl);
+        
+        const header = consoleEl.querySelector('.console-mobile-header') as HTMLElement;
+        header.click();
+        
+        const toggleBtn = consoleEl.querySelector('#console-toggle');
+        expect(toggleBtn?.textContent).toContain('Expand');
+      });
+    });
+
+    describe('AC3: Expanded state shows full console at reduced height', () => {
+      it('should expand when toggle is clicked twice', () => {
+        const consoleEl = createConsole();
+        document.body.appendChild(consoleEl);
+        
+        const header = consoleEl.querySelector('.console-mobile-header') as HTMLElement;
+        header.click(); // Collapse
+        header.click(); // Expand
+        
+        expect(isConsoleCollapsed()).toBe(false);
+      });
+
+      it('should show full height when expanded', () => {
+        vi.stubGlobal('innerWidth', 375);
+        
+        const consoleEl = createConsole();
+        document.body.appendChild(consoleEl);
+        
+        const header = consoleEl.querySelector('.console-mobile-header') as HTMLElement;
+        header.click();
+        header.click();
+        
+        expect(consoleEl.style.maxHeight).toContain('dvh');
+        
+        vi.unstubAllGlobals();
+      });
+
+      it('should show output area when expanded', () => {
+        const consoleEl = createConsole();
+        document.body.appendChild(consoleEl);
+        
+        const header = consoleEl.querySelector('.console-mobile-header') as HTMLElement;
+        header.click();
+        header.click();
+        
+        const output = getConsoleOutput();
+        expect(output?.style.display).not.toBe('none');
+      });
+
+      it('should show input area when expanded', () => {
+        const consoleEl = createConsole();
+        document.body.appendChild(consoleEl);
+        
+        const header = consoleEl.querySelector('.console-mobile-header') as HTMLElement;
+        header.click();
+        header.click();
+        
+        const inputWrapper = consoleEl.querySelector('.console-input-wrapper') as HTMLElement;
+        expect(inputWrapper?.style.display).not.toBe('none');
+      });
+
+      it('should use 1/3 viewport height on mobile when expanded', () => {
+        vi.stubGlobal('innerWidth', 375);
+        
+        const consoleEl = createConsole();
+        document.body.appendChild(consoleEl);
+        
+        const header = consoleEl.querySelector('.console-mobile-header') as HTMLElement;
+        header.click();
+        header.click();
+        
+        expect(consoleEl.style.maxHeight).toBe(DEFAULT_CONSOLE_CONFIG.maxMobileHeight);
+        
+        vi.unstubAllGlobals();
+      });
+
+      it('should change toggle icon to "collapse" when expanded', () => {
+        const consoleEl = createConsole();
+        document.body.appendChild(consoleEl);
+        
+        const header = consoleEl.querySelector('.console-mobile-header') as HTMLElement;
+        header.click();
+        header.click();
+        
+        const toggleIcon = consoleEl.querySelector('.toggle-icon');
+        expect(toggleIcon?.textContent).toBe('▼');
+      });
+
+      it('should change toggle text to "Collapse" when expanded', () => {
+        const consoleEl = createConsole();
+        document.body.appendChild(consoleEl);
+        
+        const header = consoleEl.querySelector('.console-mobile-header') as HTMLElement;
+        header.click();
+        header.click();
+        
+        const toggleBtn = consoleEl.querySelector('#console-toggle');
+        expect(toggleBtn?.textContent).toContain('Collapse');
+      });
+    });
+
+    describe('AC4: Toggle state persists during session', () => {
+      it('should remember collapsed state during session', () => {
+        const consoleEl = createConsole();
+        document.body.appendChild(consoleEl);
+        
+        const header = consoleEl.querySelector('.console-mobile-header') as HTMLElement;
+        header.click();
+        
+        expect(isConsoleCollapsed()).toBe(true);
+      });
+
+      it('should persist collapsed state across multiple mounts', () => {
+        // First mount
+        const console1 = createConsole();
+        document.body.appendChild(console1);
+        
+        const header1 = console1.querySelector('.console-mobile-header') as HTMLElement;
+        header1.click();
+        
+        unmountConsole();
+        
+        // Second mount
+        const console2 = createConsole();
+        document.body.appendChild(console2);
+        
+        // Should still be collapsed
+        expect(isConsoleCollapsed()).toBe(true);
+        
+        unmountConsole();
+      });
+
+      it('should restore expanded state correctly', () => {
+        const consoleEl = createConsole();
+        document.body.appendChild(consoleEl);
+        
+        const header = consoleEl.querySelector('.console-mobile-header') as HTMLElement;
+        header.click(); // Collapse
+        header.click(); // Expand
+        
+        unmountConsole();
+        
+        const console2 = createConsole();
+        document.body.appendChild(console2);
+        
+        expect(isConsoleCollapsed()).toBe(false);
+        
+        unmountConsole();
+      });
+
+      it('should use setConsoleCollapsed to restore state', () => {
+        setConsoleCollapsed(true);
+        expect(isConsoleCollapsed()).toBe(true);
+        
+        setConsoleCollapsed(false);
+        expect(isConsoleCollapsed()).toBe(false);
+      });
+    });
+
+    describe('AC5: Smooth CSS transition between states', () => {
+      it('should have transition on max-height', () => {
+        const consoleEl = createConsole();
+        expect(consoleEl.style.transition).toContain('max-height');
+      });
+
+      it('should have smooth transition timing (0.3s)', () => {
+        const consoleEl = createConsole();
+        expect(consoleEl.style.transition).toContain('0.3s');
+      });
+
+      it('should have ease-out transition', () => {
+        const consoleEl = createConsole();
+        expect(consoleEl.style.transition).toMatch(/ease-out|ease/);
+      });
+
+      it('should animate toggle icon rotation', () => {
+        const consoleEl = createConsole();
+        const toggleIcon = consoleEl.querySelector('.toggle-icon');
+        
+        expect(toggleIcon?.className).toMatch(/transition-transform/);
+      });
+
+      it('should have transition on toggle button', () => {
+        const consoleEl = createConsole();
+        const toggleBtn = consoleEl.querySelector('#console-toggle');
+        
+        expect(toggleBtn?.className).toMatch(/transition/);
+      });
+    });
+
+    describe('AC6: Typecheck passes', () => {
+      it('should export isConsoleCollapsed function', () => {
+        expect(typeof isConsoleCollapsed).toBe('function');
+      });
+
+      it('should export setConsoleCollapsed function', () => {
+        expect(typeof setConsoleCollapsed).toBe('function');
+      });
+
+      it('should return boolean from isConsoleCollapsed', () => {
+        const result = isConsoleCollapsed();
+        expect(typeof result).toBe('boolean');
+      });
+
+      it('should accept boolean in setConsoleCollapsed', () => {
+        expect(() => setConsoleCollapsed(true)).not.toThrow();
+        expect(() => setConsoleCollapsed(false)).not.toThrow();
+      });
+    });
+
+    describe('Keyboard accessibility for toggle', () => {
+      it('should toggle on Enter key', () => {
+        const consoleEl = createConsole();
+        document.body.appendChild(consoleEl);
+        
+        const header = consoleEl.querySelector('.console-mobile-header') as HTMLElement;
+        const event = new KeyboardEvent('keydown', { key: 'Enter' });
+        header.dispatchEvent(event);
+        
+        expect(isConsoleCollapsed()).toBe(true);
+      });
+
+      it('should toggle on Space key', () => {
+        const consoleEl = createConsole();
+        document.body.appendChild(consoleEl);
+        
+        const header = consoleEl.querySelector('.console-mobile-header') as HTMLElement;
+        const event = new KeyboardEvent('keydown', { key: ' ' });
+        header.dispatchEvent(event);
+        
+        expect(isConsoleCollapsed()).toBe(true);
+      });
+
+      it('should be focusable', () => {
+        const consoleEl = createConsole();
+        const header = consoleEl.querySelector('.console-mobile-header') as HTMLElement;
+        
+        expect(header.getAttribute('tabindex')).toBe('0');
+      });
+
+      it('should have role="button" on header', () => {
+        const consoleEl = createConsole();
+        const header = consoleEl.querySelector('.console-mobile-header');
+        
+        expect(header?.getAttribute('role')).toBe('button');
+      });
+
+      it('should have aria-label on header', () => {
+        const consoleEl = createConsole();
+        const header = consoleEl.querySelector('.console-mobile-header');
+        
+        expect(header?.hasAttribute('aria-label')).toBe(true);
+      });
+    });
+
+    describe('Collapse/Expand with keyboard handling', () => {
+      it('should not adjust height for keyboard when collapsed', () => {
+        const mockVisualViewport = {
+          height: 300,
+          addEventListener: vi.fn(),
+          removeEventListener: vi.fn(),
+        };
+        
+        vi.stubGlobal('visualViewport', mockVisualViewport);
+        vi.stubGlobal('innerWidth', 375);
+        vi.stubGlobal('innerHeight', 667);
+        
+        const consoleEl = createConsole();
+        document.body.appendChild(consoleEl);
+        
+        // Collapse first
+        const header = consoleEl.querySelector('.console-mobile-header') as HTMLElement;
+        header.click();
+        
+        const initialHeight = consoleEl.style.maxHeight;
+        
+        // Trigger keyboard handler
+        const resizeHandler = mockVisualViewport.addEventListener.mock.calls.find(
+          call => call[0] === 'resize'
+        )?.[1];
+        
+        if (resizeHandler) {
+          resizeHandler();
+        }
+        
+        // Height should not change when collapsed
+        expect(consoleEl.style.maxHeight).toBe(initialHeight);
+        
+        vi.unstubAllGlobals();
+      });
+
+      it('should adjust height for keyboard when expanded', () => {
+        const mockVisualViewport = {
+          height: 300,
+          addEventListener: vi.fn(),
+          removeEventListener: vi.fn(),
+        };
+        
+        vi.stubGlobal('visualViewport', mockVisualViewport);
+        vi.stubGlobal('innerWidth', 375);
+        vi.stubGlobal('innerHeight', 667);
+        
+        const consoleEl = createConsole();
+        document.body.appendChild(consoleEl);
+        
+        // Ensure expanded
+        const header = consoleEl.querySelector('.console-mobile-header') as HTMLElement;
+        header.click();
+        header.click();
+        
+        // Trigger keyboard handler
+        const resizeHandler = mockVisualViewport.addEventListener.mock.calls.find(
+          call => call[0] === 'resize'
+        )?.[1];
+        
+        if (resizeHandler) {
+          resizeHandler();
+        }
+        
+        // Height should adjust for keyboard
+        const maxHeight = parseInt(consoleEl.style.maxHeight);
+        expect(maxHeight).toBeLessThan(200);
+        
+        vi.unstubAllGlobals();
+      });
+    });
+
+    describe('Programmatic collapse/expand', () => {
+      it('should collapse via setConsoleCollapsed(true)', () => {
+        const consoleEl = createConsole();
+        document.body.appendChild(consoleEl);
+        
+        setConsoleCollapsed(true);
+        
+        expect(isConsoleCollapsed()).toBe(true);
+        const maxHeight = parseInt(consoleEl.style.maxHeight);
+        expect(maxHeight).toBeLessThanOrEqual(60);
+      });
+
+      it('should expand via setConsoleCollapsed(false)', () => {
+        vi.stubGlobal('innerWidth', 375);
+        
+        const consoleEl = createConsole();
+        document.body.appendChild(consoleEl);
+        
+        setConsoleCollapsed(true);
+        setConsoleCollapsed(false);
+        
+        expect(isConsoleCollapsed()).toBe(false);
+        expect(consoleEl.style.maxHeight).toContain('dvh');
+        
+        vi.unstubAllGlobals();
+      });
+
+      it('should not change state if already collapsed', () => {
+        const consoleEl = createConsole();
+        document.body.appendChild(consoleEl);
+        
+        setConsoleCollapsed(true);
+        const height1 = consoleEl.style.maxHeight;
+        
+        setConsoleCollapsed(true);
+        const height2 = consoleEl.style.maxHeight;
+        
+        expect(height1).toBe(height2);
+      });
+
+      it('should not change state if already expanded', () => {
+        const consoleEl = createConsole();
+        document.body.appendChild(consoleEl);
+        
+        setConsoleCollapsed(false);
+        const height1 = consoleEl.style.maxHeight;
+        
+        setConsoleCollapsed(false);
+        const height2 = consoleEl.style.maxHeight;
+        
+        expect(height1).toBe(height2);
+      });
     });
   });
 });

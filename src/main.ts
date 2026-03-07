@@ -63,6 +63,8 @@ export {
   getConsoleInput, 
   getConsoleOutput,
   appendConsoleOutput,
-  clearConsoleOutput
+  clearConsoleOutput,
+  isConsoleCollapsed,
+  setConsoleCollapsed
 } from './consoleComponent';
 export type { ConsoleConfig } from './consoleComponent';
