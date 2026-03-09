@@ -95,6 +95,19 @@ export function createDancingRobot(): SVGElement {
         .robot-eye {
           animation: robot-eye-glow 1s ease-in-out infinite;
         }
+        
+        .dancing-robot {
+          display: inline-block;
+          max-width: 100%;
+          height: auto;
+        }
+        
+        @media (min-width: 1024px) {
+          .dancing-robot {
+            max-width: 200px;
+            width: 200px;
+          }
+        }
       </style>
     </defs>
     

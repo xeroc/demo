@@ -131,3 +131,11 @@
   max-width: 100%;
   height: auto;
 }
+
+/* Desktop screens - reduce robot size */
+@media (min-width: 1024px) {
+  .dancing-robot {
+    max-width: 200px;
+    width: 200px;
+  }
+}
