@@ -73,6 +73,19 @@ var p=Object.defineProperty;var g=(t,n,e)=>n in t?p(t,n,{enumerable:!0,configura
         .robot-eye {
           animation: robot-eye-glow 1s ease-in-out infinite;
         }
+        
+        .dancing-robot {
+          display: inline-block;
+          max-width: 100%;
+          height: auto;
+        }
+        
+        @media (min-width: 1024px) {
+          .dancing-robot {
+            max-width: 200px;
+            width: 200px;
+          }
+        }
       </style>
     </defs>
     
@@ -298,4 +311,4 @@ var p=Object.defineProperty;var g=(t,n,e)=>n in t?p(t,n,{enumerable:!0,configura
     }
   }
 `;function z(){if(typeof document>"u"||document.getElementById("chaoscraft-responsive-utilities"))return;const n=document.createElement("style");n.id="chaoscraft-responsive-utilities",n.textContent=U,document.head.appendChild(n)}typeof document<"u"&&document.addEventListener("DOMContentLoaded",()=>{z(),S(),M(),N(h),F("robot-container"),D()});
-//# sourceMappingURL=main-DBo9yPYr.js.map
+//# sourceMappingURL=main-jX7NAMqU.js.map
