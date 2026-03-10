@@ -7,6 +7,7 @@ import { mountDancingRobot } from './robotSvg';
 import { mountBanner } from './bannerComponent';
 import { mountNavbar } from './navbarComponent';
 import { mountFooter } from './footerComponent';
+import { mountJoke } from './jokeComponent';
 import { injectResponsiveUtilities } from './responsiveUtils';
 
 // Initialize when DOM is ready
@@ -27,6 +28,9 @@ if (typeof document !== 'undefined') {
     // Mount dancing robot
     mountDancingRobot('robot-container');
     
+    // Mount random joke below robot
+    mountJoke('joke-container-wrapper');
+    
     // Mount footer at the bottom (copyright only, no links)
     mountFooter();
   });
@@ -41,6 +45,7 @@ export { createNavbar, mountNavbar, unmountNavbar, getNavbar } from './navbarCom
 export type { NavbarConfig } from './navbarComponent';
 export { createFooter, mountFooter, unmountFooter, getFooter } from './footerComponent';
 export type { FooterConfig } from './footerComponent';
+export { mountJoke, unmountJoke, getJoke } from './jokeComponent';
 export { 
   injectResponsiveUtilities, 
   isVisibleAtBreakpoint, 
