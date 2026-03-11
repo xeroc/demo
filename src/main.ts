@@ -8,6 +8,7 @@ import { mountBanner } from './bannerComponent';
 import { mountNavbar } from './navbarComponent';
 import { mountFooter } from './footerComponent';
 import { mountJoke } from './jokeComponent';
+import { mountCountries } from './countriesComponent';
 import { injectResponsiveUtilities } from './responsiveUtils';
 
 // Initialize when DOM is ready
@@ -31,6 +32,9 @@ if (typeof document !== 'undefined') {
     // Mount random joke below robot
     mountJoke('joke-container-wrapper');
     
+    // Mount countries section (after joke, before footer)
+    mountCountries('countries-wrapper');
+    
     // Mount footer at the bottom (copyright only, no links)
     mountFooter();
   });
@@ -46,6 +50,8 @@ export type { NavbarConfig } from './navbarComponent';
 export { createFooter, mountFooter, unmountFooter, getFooter } from './footerComponent';
 export type { FooterConfig } from './footerComponent';
 export { mountJoke, unmountJoke, getJoke } from './jokeComponent';
+export { mountCountries, unmountCountries, getCountries } from './countriesComponent';
+export type { CountriesConfig } from './countriesComponent';
 export { 
   injectResponsiveUtilities, 
   isVisibleAtBreakpoint, 
