@@ -10,6 +10,8 @@ import { mountFooter } from './footerComponent';
 import { mountJoke } from './jokeComponent';
 import { mountCountries } from './countriesComponent';
 import { injectResponsiveUtilities } from './responsiveUtils';
+import { mountKonamiCode } from './konamiCodeComponent';
+import { animateMainContentSections } from './entranceAnimations';
 
 // Initialize when DOM is ready
 if (typeof document !== 'undefined') {
@@ -37,6 +39,15 @@ if (typeof document !== 'undefined') {
     
     // Mount footer at the bottom (copyright only, no links)
     mountFooter();
+    
+    // Mount Konami code Easter egg (hidden, discoverable)
+    mountKonamiCode();
+    
+    // Apply entrance animations to all main content sections
+    // Small delay ensures all components are fully mounted
+    requestAnimationFrame(() => {
+      animateMainContentSections();
+    });
   });
 }
 
@@ -62,3 +73,21 @@ export {
   MEDIA_QUERIES,
   RESPONSIVE_UTILITY_STYLES
 } from './responsiveUtils';
+export { 
+  mountKonamiCode, 
+  unmountKonamiCode, 
+  getKonamiOverlay, 
+  isKonamiActive, 
+  triggerKonamiCode,
+  resetKonamiSequence
+} from './konamiCodeComponent';
+export type { KonamiCodeConfig } from './konamiCodeComponent';
+export {
+  prefersReducedMotion,
+  applyEntranceAnimation,
+  registerEntranceAnimation,
+  registerEntranceAnimationsBatch,
+  animateMainContentSections,
+  cleanupEntranceAnimations
+} from './entranceAnimations';
+export type { EntranceAnimationConfig } from './entranceAnimations';
