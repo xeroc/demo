@@ -58,16 +58,6 @@ const Navbar: React.FC<NavbarProps> = (props = {}) => {
             >
               Home
             </Link>
-            <Link
-              to="/contact"
-              className={`text-sm sm:text-base font-medium transition-colors duration-200 ${
-                location.pathname === "/contact"
-                  ? "text-cyan-400"
-                  : "text-gray-300 hover:text-white"
-              }`}
-            >
-              Contact
-            </Link>
           </div>
         </div>
       </div>
