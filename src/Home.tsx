@@ -3,7 +3,7 @@
  * Landing page with all the main features
  */
 
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import AnimatedBackground from './AnimatedBackground';
 import Navbar from './Navbar';
 import Banner from './Banner';
@@ -11,27 +11,8 @@ import Footer from './Footer';
 import DancingRobot from './DancingRobot';
 import Joke from './Joke';
 import Countries from './Countries';
-import { useKonamiCode } from './useKonamiCode';
-import EasterEgg from './EasterEgg';
 
 const Home: React.FC = () => {
-  const [showEasterEgg, setShowEasterEgg] = useState(false);
-
-  const handleKonamiActivate = useCallback(() => {
-    setShowEasterEgg(true);
-  }, []);
-
-  const handleCloseEasterEgg = useCallback(() => {
-    setShowEasterEgg(false);
-  }, []);
-
-  // Initialize Konami code listener
-  useKonamiCode({
-    onActivate: handleKonamiActivate,
-    autoReset: true,
-    resetDelay: 5000
-  });
-
   return (
     <>
       <AnimatedBackground />
@@ -54,9 +35,6 @@ const Home: React.FC = () => {
         </main>
         <Countries />
         <Footer />
-        
-        {/* Easter Egg Display */}
-        <EasterEgg isActive={showEasterEgg} onClose={handleCloseEasterEgg} />
       </div>
     </>
   );
