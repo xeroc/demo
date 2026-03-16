@@ -6,10 +6,10 @@
 
 import React, { useState, useCallback } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './Home';
-import Contact from './Contact';
-import { useKonamiCode } from './useKonamiCode';
-import EasterEgg from './EasterEgg';
+import Home from './pages/Home';
+import Contact from './pages/Contact';
+import { useKonamiCode } from './hooks/useKonamiCode';
+import EasterEgg from './components/features/EasterEgg';
 
 const App: React.FC = () => {
   const [showEasterEgg, setShowEasterEgg] = useState(false);

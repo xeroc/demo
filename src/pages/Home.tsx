@@ -4,14 +4,14 @@
  */
 
 import React from "react";
-import AnimatedBackground from "./AnimatedBackground";
-import Navbar from "./Navbar";
-import Banner from "./Banner";
-import Footer from "./Footer";
-import DancingRobot from "./DancingRobot";
-import Joke from "./Joke";
-import Countries from "./Countries";
-import HowItWorks from "./how-it-works";
+import AnimatedBackground from "../components/features/AnimatedBackground";
+import Navbar from "../components/layout/Navbar";
+import Banner from "../components/layout/Banner";
+import Footer from "../components/layout/Footer";
+import DancingRobot from "../components/features/DancingRobot";
+import Joke from "../components/features/Joke";
+import Countries from "../components/features/Countries";
+import HowItWorks from "../components/features/how-it-works";
 
 const Home: React.FC = () => {
   return (

@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect, useRef, memo } from 'react';
-import { createConicGradient, type ConicGradientOptions } from './conicGradient';
+import { createConicGradient, type ConicGradientOptions } from '../../utils/conicGradient';
 
 export interface AnimatedBackgroundProps {
   colors?: string[];
