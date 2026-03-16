@@ -2,6 +2,9 @@
  * Main module for ChaosCraft site
  */
 
+// Import Tailwind CSS
+import './index.css';
+
 import { initAnimatedBackground, DEFAULT_CONFIG } from './index';
 import { mountDancingRobot } from './robotSvg';
 import { mountBanner } from './bannerComponent';
