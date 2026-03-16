@@ -1,3 +1,10 @@
+/**
+ * How It Works Component
+ * Explains the ChaosCraft process to visitors
+ */
+
+import React from 'react';
+
 const HowItWorks: React.FC = () => {
   return (
     <section className="mt-8 sm:mt-12 md:mt-16 mb-8 sm:mb-12 md:mb-16 w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-10 md:py-12 bg-gradient-to-br from-slate-900/40 via-slate-800/30 to-slate-900/40 rounded-2xl sm:rounded-3xl backdrop-blur-sm border border-white/10 shadow-xl hover:shadow-2xl transition-shadow duration-300 relative">
