@@ -87,13 +87,20 @@ describe('Footer Component', () => {
   });
 
   describe('Layout', () => {
-    it('should center content', () => {
+    it('should center content horizontally', () => {
       render(<Footer />);
       
       const footer = screen.getByRole('contentinfo');
       const container = footer.querySelector('.flex');
       expect(container?.className).toContain('items-center');
-      expect(container?.className).toContain('justify-center');
+      expect(container?.className).toContain('flex-col');
+    });
+
+    it('should center text within paragraph', () => {
+      render(<Footer />);
+      
+      const copyright = screen.getByText(/© 2026 ChaosCraft/);
+      expect(copyright.className).toContain('text-center');
     });
 
     it('should use max-w-7xl container', () => {

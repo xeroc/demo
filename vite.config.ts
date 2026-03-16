@@ -10,10 +10,7 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: true,
     rollupOptions: {
-      input: {
-        main: resolve(__dirname, 'index.html'),
-        contact: resolve(__dirname, 'contact.html')
-      }
+      input: resolve(__dirname, 'index.html')
     }
   },
   resolve: {

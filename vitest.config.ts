@@ -5,11 +5,12 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    include: ['src/**/*.test.ts'],
+    setupFiles: ['./src/test-setup.ts'],
+    include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
     exclude: ['node_modules', 'dist'],
     coverage: {
       reporter: ['text', 'json', 'html'],
-      exclude: ['node_modules/', 'dist/', '**/*.test.ts']
+      exclude: ['node_modules/', 'dist/', '**/*.test.ts', '**/*.test.tsx']
     }
   },
   resolve: {
