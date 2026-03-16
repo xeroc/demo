@@ -3,14 +3,15 @@
  * Landing page with all the main features
  */
 
-import React from 'react';
-import AnimatedBackground from './AnimatedBackground';
-import Navbar from './Navbar';
-import Banner from './Banner';
-import Footer from './Footer';
-import DancingRobot from './DancingRobot';
-import Joke from './Joke';
-import Countries from './Countries';
+import React from "react";
+import AnimatedBackground from "./AnimatedBackground";
+import Navbar from "./Navbar";
+import Banner from "./Banner";
+import Footer from "./Footer";
+import DancingRobot from "./DancingRobot";
+import Joke from "./Joke";
+import Countries from "./Countries";
+import HowItWorks from "./how-it-works";
 
 const Home: React.FC = () => {
   return (
@@ -34,6 +35,7 @@ const Home: React.FC = () => {
           </div>
         </main>
         <Countries />
+        <HowItWorks />
         <Footer />
       </div>
     </>
