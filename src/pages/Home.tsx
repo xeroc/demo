@@ -13,6 +13,7 @@ import Joke from "../components/features/Joke";
 import Countries from "../components/features/Countries";
 import HowItWorks from "../components/features/how-it-works";
 import SnarkyLoader from "../components/features/SnarkyLoader";
+import { ExplodingHeading } from "../components/features/ExplodingHeading";
 import { useMultiClick } from "../hooks/useMultiClick";
 
 const Home: React.FC = () => {
@@ -84,13 +85,18 @@ const Home: React.FC = () => {
         <Navbar />
         <main className="flex-1 flex items-center justify-center py-8 sm:py-12 md:py-16">
           <div className="text-center relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
-            <h1 
-              ref={titleRef as React.RefObject<HTMLHeadingElement>}
-              className="text-4xl sm:text-5xl md:text-6xl font-bold text-white drop-shadow-lg animate-pulse mb-4 sm:mb-6 md:mb-8 cursor-pointer select-none"
+            <div 
+              ref={titleRef as React.RefObject<HTMLDivElement>}
+              className="mb-4 sm:mb-6 md:mb-8"
               title="Click 5 times for a surprise..."
             >
-              Welcome to ChaosCraft
-            </h1>
+              <ExplodingHeading 
+                as="h1" 
+                className="text-4xl sm:text-5xl md:text-6xl font-bold text-white drop-shadow-lg animate-pulse cursor-pointer select-none"
+              >
+                Welcome to ChaosCraft
+              </ExplodingHeading>
+            </div>
             <p className="text-base sm:text-lg md:text-xl text-white/80 mb-8">
               The chaos has begun. Everything is possible.
             </p>
