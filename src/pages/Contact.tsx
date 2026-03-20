@@ -4,6 +4,7 @@
  */
 
 import React, { useState, FormEvent } from 'react';
+import { ExplodingHeading } from '../components/features/ExplodingHeading';
 
 interface FormData {
   fullName: string;
@@ -132,9 +133,14 @@ const Contact: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 md:py-16">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 sm:mb-8 md:mb-10 text-center">
-          Contact Us
-        </h1>
+        <div className="text-center mb-6 sm:mb-8 md:mb-10">
+          <ExplodingHeading 
+            as="h1" 
+            className="text-3xl sm:text-4xl md:text-5xl font-bold text-white"
+          >
+            Contact Us
+          </ExplodingHeading>
+        </div>
 
         {showSuccess && (
           <div className="bg-green-500/20 border border-green-400/50 text-green-200 px-4 sm:px-6 py-3 sm:py-4 rounded-lg sm:rounded-xl mb-4 sm:mb-6 text-sm sm:text-base md:text-lg">
